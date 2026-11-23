@@ -174,7 +174,7 @@ fn diagnostic_arguments_reject_unknown_profiles_and_preserve_native_report_paths
             "--quality",
             "maximum",
             "--report",
-            "target-evidence/T-096/ölçüm.json",
+            "target/evidence/T-096/ölçüm.json",
         ]
         .map(Into::into),
     )
@@ -183,7 +183,7 @@ fn diagnostic_arguments_reject_unknown_profiles_and_preserve_native_report_paths
     assert!(parsed.maximum);
     assert_eq!(
         parsed.report,
-        std::path::PathBuf::from("target-evidence/T-096/ölçüm.json")
+        std::path::PathBuf::from("target/evidence/T-096/ölçüm.json")
     );
     assert!(Config::parse(["--profile", "unknown"].map(Into::into)).is_err());
     assert!(Config::parse(["--quality", "proxy"].map(Into::into)).is_err());
@@ -198,8 +198,8 @@ fn real_export_measures_publication_after_warmup_and_cache_invalidation() {
         .as_nanos();
     let config = texelith_ui_egui::export_perf::Config {
         size: 32,
-        report: std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join(format!("../../target-evidence/T-096/test-{stamp}.json")),
+        report: std::path::PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+            .join(format!("evidence/T-096/test-{stamp}.json")),
         ..Default::default()
     };
     let report = texelith_ui_egui::export_perf::exercise(&config).unwrap();

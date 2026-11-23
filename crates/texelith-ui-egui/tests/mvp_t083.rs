@@ -158,8 +158,8 @@ fn settle(c: &mut Controls) {
 
 #[test]
 fn versioned_custom_presets_survive_a_new_session_and_rebind_node_ids() {
-    let root = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-083")
+    let root = std::path::PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+        .join("evidence/T-083")
         .join(format!("presets-test-{}", std::process::id()));
     std::fs::create_dir_all(&root).unwrap();
     let path = root.join("presets.json");
@@ -344,8 +344,8 @@ fn pointer_opens_editor_and_changes_inversion_without_mutating_graph() {
 
 #[test]
 fn malformed_storage_keeps_loaded_presets_and_can_be_reloaded_after_repair() {
-    let root = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-083")
+    let root = std::path::PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+        .join("evidence/T-083")
         .join(format!("reload-test-{}", std::process::id()));
     std::fs::create_dir_all(&root).unwrap();
     let path = root.join("presets.json");

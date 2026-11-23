@@ -1,5 +1,4 @@
-//! T-070 behavioral contract. Proposed accessor and payload names are recorded
-//! in docs/evidence/T-070/test-contract.md; all mutation goes through Session.
+//! Material template and preset contracts; all mutation goes through Session.
 use serde_json::{Value, json};
 use std::collections::HashSet;
 use texelith_core::*;

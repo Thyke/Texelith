@@ -3,7 +3,7 @@ use super::*;
 #[test]
 fn a_manifest_created_after_preflight_cannot_be_replaced() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-087")
+        .join("../../target/evidence/T-087")
         .join(format!("publication-race-{}", std::process::id()));
     std::fs::create_dir_all(&root).unwrap();
     let destination = root.join("job.json");

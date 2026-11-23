@@ -1,6 +1,5 @@
-//! T-044 sequential behavioral contract. Proposed wire spellings and discovery
-//! schema are documented in docs/evidence/T-044/test-contract.md. JSON is used
-//! only at the production DTO boundary; all mutation is through Session.
+//! Command wire format and discovery schema contracts. JSON is used only at
+//! the production DTO boundary; all mutation is through Session.
 use serde::Deserialize;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;

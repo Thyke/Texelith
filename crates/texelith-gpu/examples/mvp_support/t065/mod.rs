@@ -25,7 +25,7 @@ pub(crate) fn run_registered(context: &crate::SuiteContext<'_>) -> Result<Value>
 }
 fn run(g: &Gpu, context: &crate::SuiteContext<'_>) -> Result<Value> {
     checks::analytic(g)?;
-    let capture_dir = std::path::Path::new("docs/evidence/T-065");
+    let capture_dir = std::path::Path::new("target/evidence/T-065");
     let churn = checks::primitives_and_lifetime(g, Some(capture_dir))?;
     checks::budget(g)?;
     let worker = g.worker(BUDGET)?;

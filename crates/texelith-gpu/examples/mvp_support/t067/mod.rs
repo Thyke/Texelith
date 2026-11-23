@@ -18,7 +18,7 @@ pub(crate) fn run_registered(context: &crate::SuiteContext<'_>) -> Result<Value>
     let (checks, cold_ms, convolution_ms) = checks::worker(
         &g,
         Some(std::path::Path::new(
-            "docs/evidence/T-067/ibl-sphere-matrix.png",
+            "target/evidence/T-067/ibl-sphere-matrix.png",
         )),
     )?;
     let worker = g.worker(BUDGET)?;

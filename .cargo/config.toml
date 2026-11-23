@@ -1,0 +1,7 @@
+# Native CRT is linked into the executable; no VC++ redistributable installer is required.
+[target.'cfg(all(target_os = "windows", target_env = "msvc"))']
+rustflags = ["-C", "target-feature=+crt-static"]
+
+# Packaging must use the same minimum version in the application bundle plist.
+[env]
+MACOSX_DEPLOYMENT_TARGET = { value = "13.0", force = false }

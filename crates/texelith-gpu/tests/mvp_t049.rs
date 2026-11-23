@@ -1,4 +1,4 @@
-//! Tests-first T-049 contract. Proposed API: docs/evidence/T-049/test-contract.md.
+//! Poisson operator API and numerical contracts.
 //! No implementation stubs and no V-cycle driver are supplied by this pass.
 
 #[path = "support/abi.rs"]

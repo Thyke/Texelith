@@ -34,7 +34,7 @@ fn device() -> (Arc<wgpu::Device>, Arc<wgpu::Queue>) {
 
 fn directory(name: &str) -> std::path::PathBuf {
     let root = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-087")
+        .join("../../target/evidence/T-087")
         .join(format!(
             "{name}-{}-{}",
             std::process::id(),

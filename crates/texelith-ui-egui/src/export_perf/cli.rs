@@ -24,7 +24,7 @@ impl Default for Config {
             }
             .into(),
             adapter: None,
-            report: "target-evidence/T-096/run.json".into(),
+            report: "target/evidence/T-096/run.json".into(),
         }
     }
 }

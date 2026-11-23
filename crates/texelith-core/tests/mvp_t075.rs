@@ -1,4 +1,4 @@
-//! Proposed T-075 API and behavioral contract; see docs/evidence/T-075/test-contract.md.
+//! Mask blending API and behavioral contracts.
 use texelith_core::*;
 
 fn map(port: OutputPort, component: Component) -> ChannelSpec {

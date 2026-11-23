@@ -1,5 +1,5 @@
-//! Explicit cache schema 2. Field order and tags are frozen in
-//! `docs/evidence/T-041/implementation.md`; schema 1 remains in `cache`.
+//! Explicit cache schema 2. Field order and tags are fixed by the canonical
+//! encoder and golden-byte tests; schema 1 remains in `cache`.
 
 use crate::cache::{extent_bytes, float_bytes, u32_bytes};
 use crate::{

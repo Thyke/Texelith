@@ -7,9 +7,8 @@ fn perf_metrics_completed_proxies_survive_the_next_input() {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
         .as_millis();
-    let report = root.join(format!(
-        "docs/evidence/T-020/handoff-regression-{stamp}.json"
-    ));
+    let report = std::path::Path::new(env!("CARGO_TARGET_TMPDIR"))
+        .join(format!("evidence/T-020/handoff-regression-{stamp}.json"));
     let output = std::process::Command::new(env!("CARGO_BIN_EXE_texelith-ui-egui"))
         .current_dir(&root)
         .args([

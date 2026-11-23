@@ -26,7 +26,7 @@ impl Config {
             backend: "dx12".into(),
             adapter: "RTX 5070 Ti".into(),
             suite: "all".into(),
-            report: "docs/evidence/T-015/numerics.json".into(),
+            report: "target/evidence/T-015/numerics.json".into(),
         };
         let mut args = std::env::args().skip(1);
         while let Some(key) = args.next() {

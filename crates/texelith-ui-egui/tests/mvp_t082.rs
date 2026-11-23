@@ -145,7 +145,7 @@ fn export_diagnostic_is_recognized_and_unknown_scenario_fails() {
             "--size",
             "1024",
             "--report",
-            "target-evidence/T-082/test.json",
+            "target/evidence/T-082/test.json",
         ]
         .map(str::to_owned),
     )
@@ -162,8 +162,8 @@ fn real_shared_gpu_export_contract() {
     let config = Config {
         size: 32,
         report: Some(
-            std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-                .join("../../target-evidence/T-082/test-export.json"),
+            std::path::PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+                .join("evidence/T-082/test-export.json"),
         ),
         ..Default::default()
     };

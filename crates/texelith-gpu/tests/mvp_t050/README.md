@@ -1,22 +1,17 @@
-# T-050 tests-first contract
+# Poisson solver test contracts
 
-Only this test directory and `tests/mvp_t050.rs` are authored in this pass.
-No solver, WGSL, shared registry edits, success stubs or new dependencies are
-supplied. The production-dependent target is intentionally red before T-050's
-sequential implementer pass. The pure CPU oracle can run independently:
+The CPU oracle runs independently of the GPU solver:
 
 ```powershell
-rustc --edition=2024 --test crates/texelith-gpu/tests/mvp_t050/oracle.rs -o target-evidence/T-050/oracle-tests.exe
-& target-evidence/T-050/oracle-tests.exe
+New-Item -ItemType Directory -Force target/evidence/T-050 | Out-Null
+rustc --edition=2024 --test crates/texelith-gpu/tests/mvp_t050/oracle.rs -o target/evidence/T-050/oracle-tests.exe
+& target/evidence/T-050/oracle-tests.exe
 ```
 
-## Proposed additive leaf API
+## Solver API
 
-These are test-author proposed names, not symbols promised by the ADR. Equivalent
-API spelling can be reconciled by the implementer without weakening assertions.
-Export from the task-owned module; do not alter the node registry just to satisfy
-tests. The material tests use existing public typed request/worker/plan APIs and
-are independent of T-121's registration refactor.
+The solver tests exercise this public leaf boundary. Material tests use the
+public typed request, worker and plan APIs independently of node registration.
 
 ```rust
 #[derive(Clone, Debug)]
@@ -93,52 +88,15 @@ scalars. History and scratch allocation must not grow without the 16-cycle bound
   zero-assertion and GPU-validation-error rejection. It creates no benchmark
   evidence from invented schema samples.
 
-## Implementation and integration follow-through
+## Verification
 
-Run the task's exact cargo and full-node release benchmark commands. The `poisson`
-runner must exercise the CPU comparisons, NPOT, nonintegrable/failed iteration,
-cancellation and memory tests with real assertions and report adapter/backend,
-manifest hash, residuals/cycles, clamp counts, peak bytes, 10 warmups + 100 complete
-node timings, and separate maximum-quality timings. Default 4K p95 stays <16 ms;
-the maximum-quality result is separately reported. No per-dispatch timing can
-substitute for complete solve timing. Shader warmup and initialization scope must
-be explicit. These source tests do not certify unimplemented performance.
+Run `cargo test -p texelith-gpu --test mvp_t050 --locked` for the contracts and
+`cargo run --release -p texelith-gpu --example verify_mvp -- --suite poisson
+--size 4096 --backend dx12 --adapter-name "RTX 5070 Ti"
+--report target/evidence/T-050/poisson.json` for hardware measurements.
 
-T-049 currently contains an outdated negative suite-name assertion in
-`tests/mvp_t049/report.rs` which explicitly rejects `poisson`. Once this task's
-suite is registered, that assertion conflicts with T-050 acceptance. It is
-outside this test-author's scope: orchestrator must authorize its owner to remove
-only that invalid-name case. Keep `poisson_operators` separately registered.
-
-The native `measure-faz0` gate is deferred to the orchestrator, per dispatch.
-
-## Recorded tests-first baseline (2026-11-11)
-
-There are 25 authored tests. No production implementation was changed.
-
-| Check | Observed result |
-| --- | --- |
-| `rustfmt --check --edition 2024 crates/texelith-gpu/tests/mvp_t050.rs` | PASS |
-| Standalone `rustc --test` oracle command above | PASS: 4/4 anchors |
-| Isolated public-contract compile against built debug libraries | PASS: existing-API tests and upload/readback helpers compile without stubs |
-| Isolated CPU/public-contract execution | RED: 6 passed, 4 failed; four GPU worker cases deliberately filtered out of this diagnostic run |
-| `cargo build -p texelith-gpu --all-targets --locked` | RED, exit 101: E0432, four proposed solver exports absent |
-| `cargo test -p texelith-gpu --test mvp_t050 --locked` | RED, exit 101: same missing API; no dedicated tests execute |
-| `cargo test -p texelith-gpu --locked` | RED, exit 101: same target prevents full test execution; existing GPU contracts not certified |
-| Task's exact release `verify_mvp --suite poisson --size 4096 --backend dx12 --adapter-name "RTX 5070 Ti" --report target-evidence/T-050/poisson.json` command | RED, exit 1 after release compilation: `unknown or empty suite: poisson`; no report or hardware timing produced |
-| Task's exact `measure-faz0.ps1` command | DEFERRED to orchestrator; never launched |
-
-The four isolated red cases are two `MaterialPlan` tests returning
-`Unsupported { node: NodeId(2) }`, suite registration rejecting `poisson`, and
-the generic report validator rejecting that same unregistered suite. The six
-passes are the four numerical CPU anchors, binary16 fixture anchors, and
-full-node p95 aggregation. This diagnostic subset is not the dedicated cargo
-acceptance target and does not count the unexecuted GPU tests as passed.
-
-Raw build/test/release logs and the generated diagnostic wrapper/binaries are
-under ignored `target-evidence/T-050/` (`build.log`, `test-t050.log`,
-`test-gpu.log`, `verify-poisson.log`, `public-compile.log`, `public-contracts.log`).
-The wrapper includes the same oracle/GPU-helper/material/harness modules while
-excluding the missing-API solver module; it contains no production substitutions.
-GPU numerical behavior, cancellation, memory peaks and performance remain
-unmeasured until implementation. No dependencies were added.
+The hardware runner records adapter/backend, manifest hash, residuals/cycles,
+clamp counts and peak bytes. Timings sum complete solves after 10 warmups over
+100 measurements, with maximum quality reported separately. Default 4K p95
+must be at most 100 ms, and the 1K interactive proxy p95 must stay below
+16 ms. Per-dispatch timings cannot substitute for a complete solve. Unit tests alone do not establish hardware performance.

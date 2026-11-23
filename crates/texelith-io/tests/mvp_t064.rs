@@ -1,5 +1,4 @@
-//! T-064 behavioral contract. API proposals and unspecified policies are recorded
-//! in docs/evidence/T-064/test-contract.md; no importer implementation lives here.
+//! Mesh importer contracts exercising the production importer.
 
 #[path = "mvp_t064/fixtures.rs"]
 mod fixtures;

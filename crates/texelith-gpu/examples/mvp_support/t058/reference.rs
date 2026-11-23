@@ -1,7 +1,5 @@
 //! Independent f64 test oracle; original fixtures, no production transform/math.
-//!
-//! This freezes the previously unspecified u32 hash/window as a tests-first
-//! proposal. See docs/evidence/T-058/test-contract.md before implementing.
+//! Defines the deterministic u32 hash and neighborhood window used by the checks.
 use texelith_core::{Boundary, Extent};
 
 pub const MAX_NEIGHBORS: usize = 9;

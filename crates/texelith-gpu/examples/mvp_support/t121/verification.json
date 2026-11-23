@@ -13,12 +13,12 @@
       "passed_tests": 702,
       "ignored_tests": 1,
       "ignored": "perf_metrics_completed_proxies_survive_the_next_input (interactive Windows/RTX gate)",
-      "log": "target-evidence/T-121/tests-final.log"
+      "log": "tests-final.log"
     },
     "clippy": {
       "command": "cargo clippy --workspace --all-targets --locked --offline -- -D warnings",
       "passed": true,
-      "log": "target-evidence/T-121/clippy-final.log"
+      "log": "clippy-final.log"
     },
     "format": {
       "command": "cargo fmt --all -- --check; rustfmt --edition 2024 --config skip_children=true --check <changed macro-declared runtime/suite files>",
@@ -35,7 +35,7 @@
   },
   "test_environment": {
     "CARGO_INCREMENTAL": "0 (avoid sandbox hard-link warnings)",
-    "TEMP_TMP": "<worktree>/target-evidence/T-121/tmp",
+    "TEMP_TMP": "<artifact-dir>/tmp",
     "initial_test_failure": "Default external temp directory: texelith-io writes_require_explicit_overwrite_and_preserve_existing_on_failure, Windows Access denied at image_contract.rs:202; full workspace reruns with worktree temp passed without test or IO edits."
   },
   "measurement": {
@@ -45,11 +45,11 @@
     "kind": "completion_upper_bound",
     "warmups_per_run": 10,
     "measurements_per_run": 100,
-    "command": "<before-or-after-release-exe> --suite <suite> --size 4096 --backend dx12 --adapter-name \"RTX 5070 Ti\" --report target-evidence/T-121/paired-<round>-<variant>-<suite>.json",
+    "command": "<before-or-after-release-exe> --suite <suite> --size 4096 --backend dx12 --adapter-name \"RTX 5070 Ti\" --report paired-<round>-<variant>-<suite>.json",
     "method": "Three serial paired runs, reverse order in round 2; no agent-launched builds or other GPU tests overlap. Compare median p95 per binary. Height got two additional predefined pairs after its three-pair result failed amid large variation; all original observations retained.",
     "excluded_preliminary_runs": "before-*.json / after-*.json retained but excluded from the paired comparison: a development build overlapped part of the first baseline run.",
     "before_executable": {
-      "path": "target-evidence/T-121/verify_mvp-before.exe",
+      "path": "verify_mvp-before.exe",
       "sha256": "a5bff786e784e73dc0fae0f2ff237511471e90fc4efae523ff763b2a0511f1be"
     },
     "after_executable": {
@@ -100,7 +100,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-1-before-height.json",
+              "report": "paired-1-before-height.json",
               "passed": false,
               "default_p95_ms": 24.520799999999998,
               "maximum_p95_ms": 25.1153,
@@ -110,7 +110,7 @@
               "default_peak_bytes": 447397288
             },
             "after": {
-              "report": "target-evidence/T-121/paired-1-after-height.json",
+              "report": "paired-1-after-height.json",
               "passed": false,
               "default_p95_ms": 25.083000000000002,
               "maximum_p95_ms": 25.980900000000002,
@@ -127,7 +127,7 @@
               "before"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-2-before-height.json",
+              "report": "paired-2-before-height.json",
               "passed": true,
               "default_p95_ms": 9.9087,
               "maximum_p95_ms": 10.383,
@@ -137,7 +137,7 @@
               "default_peak_bytes": 447397288
             },
             "after": {
-              "report": "target-evidence/T-121/paired-2-after-height.json",
+              "report": "paired-2-after-height.json",
               "passed": true,
               "default_p95_ms": 11.719,
               "maximum_p95_ms": 10.2146,
@@ -154,7 +154,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-3-before-height.json",
+              "report": "paired-3-before-height.json",
               "passed": true,
               "default_p95_ms": 8.0306,
               "maximum_p95_ms": 8.102500000000001,
@@ -164,7 +164,7 @@
               "default_peak_bytes": 447397288
             },
             "after": {
-              "report": "target-evidence/T-121/paired-3-after-height.json",
+              "report": "paired-3-after-height.json",
               "passed": true,
               "default_p95_ms": 7.5298,
               "maximum_p95_ms": 7.8192,
@@ -181,7 +181,7 @@
               "before"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-4-before-height.json",
+              "report": "paired-4-before-height.json",
               "passed": true,
               "default_p95_ms": 9.4648,
               "maximum_p95_ms": 9.5105,
@@ -191,7 +191,7 @@
               "default_peak_bytes": 447397288
             },
             "after": {
-              "report": "target-evidence/T-121/paired-4-after-height.json",
+              "report": "paired-4-after-height.json",
               "passed": false,
               "default_p95_ms": 25.1627,
               "maximum_p95_ms": 32.8055,
@@ -208,7 +208,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-5-before-height.json",
+              "report": "paired-5-before-height.json",
               "passed": true,
               "default_p95_ms": 9.7305,
               "maximum_p95_ms": 9.1164,
@@ -218,7 +218,7 @@
               "default_peak_bytes": 447397288
             },
             "after": {
-              "report": "target-evidence/T-121/paired-5-after-height.json",
+              "report": "paired-5-after-height.json",
               "passed": true,
               "default_p95_ms": 9.3927,
               "maximum_p95_ms": 8.6148,
@@ -262,7 +262,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-1-before-normal.json",
+              "report": "paired-1-before-normal.json",
               "passed": true,
               "default_p95_ms": 9.827300000000001,
               "maximum_p95_ms": 468.2131,
@@ -273,7 +273,7 @@
               "legacy_p95_ms": 8.2614
             },
             "after": {
-              "report": "target-evidence/T-121/paired-1-after-normal.json",
+              "report": "paired-1-after-normal.json",
               "passed": true,
               "default_p95_ms": 10.5724,
               "maximum_p95_ms": 456.6457,
@@ -291,7 +291,7 @@
               "before"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-2-before-normal.json",
+              "report": "paired-2-before-normal.json",
               "passed": true,
               "default_p95_ms": 5.3579,
               "maximum_p95_ms": 126.1808,
@@ -302,7 +302,7 @@
               "legacy_p95_ms": 0.9333
             },
             "after": {
-              "report": "target-evidence/T-121/paired-2-after-normal.json",
+              "report": "paired-2-after-normal.json",
               "passed": true,
               "default_p95_ms": 4.9355,
               "maximum_p95_ms": 127.10810000000001,
@@ -320,7 +320,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-3-before-normal.json",
+              "report": "paired-3-before-normal.json",
               "passed": true,
               "default_p95_ms": 4.1621999999999995,
               "maximum_p95_ms": 126.19430000000001,
@@ -331,7 +331,7 @@
               "legacy_p95_ms": 1.0225
             },
             "after": {
-              "report": "target-evidence/T-121/paired-3-after-normal.json",
+              "report": "paired-3-after-normal.json",
               "passed": true,
               "default_p95_ms": 3.9011,
               "maximum_p95_ms": 126.4063,
@@ -370,7 +370,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-1-before-poisson_operators.json",
+              "report": "paired-1-before-poisson_operators.json",
               "passed": false,
               "default_p95_ms": 33.2319,
               "maximum_p95_ms": 132.47410000000002,
@@ -380,7 +380,7 @@
               "default_peak_bytes": 540265484
             },
             "after": {
-              "report": "target-evidence/T-121/paired-1-after-poisson_operators.json",
+              "report": "paired-1-after-poisson_operators.json",
               "passed": false,
               "default_p95_ms": 21.8297,
               "maximum_p95_ms": 21.464299999999998,
@@ -397,7 +397,7 @@
               "before"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-2-before-poisson_operators.json",
+              "report": "paired-2-before-poisson_operators.json",
               "passed": true,
               "default_p95_ms": 11.0613,
               "maximum_p95_ms": 19.9006,
@@ -407,7 +407,7 @@
               "default_peak_bytes": 540265484
             },
             "after": {
-              "report": "target-evidence/T-121/paired-2-after-poisson_operators.json",
+              "report": "paired-2-after-poisson_operators.json",
               "passed": true,
               "default_p95_ms": 10.9851,
               "maximum_p95_ms": 20.3002,
@@ -424,7 +424,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-3-before-poisson_operators.json",
+              "report": "paired-3-before-poisson_operators.json",
               "passed": true,
               "default_p95_ms": 11.0161,
               "maximum_p95_ms": 19.9498,
@@ -434,7 +434,7 @@
               "default_peak_bytes": 540265484
             },
             "after": {
-              "report": "target-evidence/T-121/paired-3-after-poisson_operators.json",
+              "report": "paired-3-after-poisson_operators.json",
               "passed": true,
               "default_p95_ms": 10.8253,
               "maximum_p95_ms": 20.2642,
@@ -472,7 +472,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-1-before-roughness.json",
+              "report": "paired-1-before-roughness.json",
               "passed": true,
               "default_p95_ms": 0.7573000000000001,
               "maximum_p95_ms": 1.0393,
@@ -482,7 +482,7 @@
               "default_peak_bytes": 469762816
             },
             "after": {
-              "report": "target-evidence/T-121/paired-1-after-roughness.json",
+              "report": "paired-1-after-roughness.json",
               "passed": true,
               "default_p95_ms": 0.7328,
               "maximum_p95_ms": 0.9504,
@@ -499,7 +499,7 @@
               "before"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-2-before-roughness.json",
+              "report": "paired-2-before-roughness.json",
               "passed": true,
               "default_p95_ms": 0.924,
               "maximum_p95_ms": 1.2102,
@@ -509,7 +509,7 @@
               "default_peak_bytes": 469762816
             },
             "after": {
-              "report": "target-evidence/T-121/paired-2-after-roughness.json",
+              "report": "paired-2-after-roughness.json",
               "passed": true,
               "default_p95_ms": 0.5589,
               "maximum_p95_ms": 1.0853,
@@ -526,7 +526,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-3-before-roughness.json",
+              "report": "paired-3-before-roughness.json",
               "passed": true,
               "default_p95_ms": 0.736,
               "maximum_p95_ms": 1.221,
@@ -536,7 +536,7 @@
               "default_peak_bytes": 469762816
             },
             "after": {
-              "report": "target-evidence/T-121/paired-3-after-roughness.json",
+              "report": "paired-3-after-roughness.json",
               "passed": true,
               "default_p95_ms": 0.731,
               "maximum_p95_ms": 1.0552000000000001,
@@ -574,7 +574,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-1-before-ao.json",
+              "report": "paired-1-before-ao.json",
               "passed": true,
               "default_p95_ms": 10.0949,
               "maximum_p95_ms": 382.447,
@@ -584,7 +584,7 @@
               "default_peak_bytes": 201330816
             },
             "after": {
-              "report": "target-evidence/T-121/paired-1-after-ao.json",
+              "report": "paired-1-after-ao.json",
               "passed": true,
               "default_p95_ms": 9.9541,
               "maximum_p95_ms": 403.9766,
@@ -601,7 +601,7 @@
               "before"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-2-before-ao.json",
+              "report": "paired-2-before-ao.json",
               "passed": true,
               "default_p95_ms": 8.661200000000001,
               "maximum_p95_ms": 369.27700000000004,
@@ -611,7 +611,7 @@
               "default_peak_bytes": 201330816
             },
             "after": {
-              "report": "target-evidence/T-121/paired-2-after-ao.json",
+              "report": "paired-2-after-ao.json",
               "passed": true,
               "default_p95_ms": 9.4181,
               "maximum_p95_ms": 384.7493,
@@ -628,7 +628,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-3-before-ao.json",
+              "report": "paired-3-before-ao.json",
               "passed": true,
               "default_p95_ms": 10.3681,
               "maximum_p95_ms": 384.6241,
@@ -638,7 +638,7 @@
               "default_peak_bytes": 201330816
             },
             "after": {
-              "report": "target-evidence/T-121/paired-3-after-ao.json",
+              "report": "paired-3-after-ao.json",
               "passed": true,
               "default_p95_ms": 8.4265,
               "maximum_p95_ms": 375.0815,
@@ -676,7 +676,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-1-before-seamless_offset.json",
+              "report": "paired-1-before-seamless_offset.json",
               "passed": true,
               "default_p95_ms": 7.353,
               "maximum_p95_ms": 7.7919,
@@ -686,7 +686,7 @@
               "default_peak_bytes": 402653440
             },
             "after": {
-              "report": "target-evidence/T-121/paired-1-after-seamless_offset.json",
+              "report": "paired-1-after-seamless_offset.json",
               "passed": true,
               "default_p95_ms": 8.295800000000002,
               "maximum_p95_ms": 8.126,
@@ -703,7 +703,7 @@
               "before"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-2-before-seamless_offset.json",
+              "report": "paired-2-before-seamless_offset.json",
               "passed": true,
               "default_p95_ms": 6.851699999999999,
               "maximum_p95_ms": 6.290900000000001,
@@ -713,7 +713,7 @@
               "default_peak_bytes": 402653440
             },
             "after": {
-              "report": "target-evidence/T-121/paired-2-after-seamless_offset.json",
+              "report": "paired-2-after-seamless_offset.json",
               "passed": true,
               "default_p95_ms": 6.223,
               "maximum_p95_ms": 6.0158,
@@ -730,7 +730,7 @@
               "after"
             ],
             "before": {
-              "report": "target-evidence/T-121/paired-3-before-seamless_offset.json",
+              "report": "paired-3-before-seamless_offset.json",
               "passed": true,
               "default_p95_ms": 6.541,
               "maximum_p95_ms": 6.5598,
@@ -740,7 +740,7 @@
               "default_peak_bytes": 402653440
             },
             "after": {
-              "report": "target-evidence/T-121/paired-3-after-seamless_offset.json",
+              "report": "paired-3-after-seamless_offset.json",
               "passed": true,
               "default_p95_ms": 6.2224,
               "maximum_p95_ms": 6.2988,

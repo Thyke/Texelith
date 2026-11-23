@@ -1,5 +1,5 @@
 //! Synthetic contracts for the production ADR 0003 evaluator, before implementation.
-//! Proposed API and timestamp semantics: docs/evidence/T-020/test-contract.md.
+//! Covers completed proxy timestamps and their accumulation across input changes.
 
 use std::process::ExitCode;
 

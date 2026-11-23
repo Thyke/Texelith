@@ -74,7 +74,7 @@ pub(crate) fn export_phase(destination: &Path, name: &'static str, capture: &Exp
 #[test]
 fn preview_completes_while_export_is_paused_before_gpu_and_publication() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-087")
+        .join("../../target/evidence/T-087")
         .join(format!("phase-regression-{}", std::process::id()));
     std::fs::create_dir_all(&root).unwrap();
     let mut config = crate::startup::Config::parse(

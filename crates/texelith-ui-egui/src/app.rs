@@ -1079,7 +1079,7 @@ fn write_evidence_screenshot(
         .filter_map(|p| p.file_name())
         .find(|s| s.to_str().is_some_and(|s| s.starts_with("T-")))
         .unwrap_or_else(|| std::ffi::OsStr::new("T-072"));
-    let raw = std::path::Path::new("target-evidence")
+    let raw = std::path::Path::new("target/evidence")
         .join(task)
         .join("native-captures")
         .join(

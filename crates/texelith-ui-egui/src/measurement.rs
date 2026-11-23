@@ -506,7 +506,7 @@ mod tests {
     #[test]
     fn independent_watchdog_terminates_a_blocked_shutdown_and_preserves_evidence() {
         let path = Path::new(env!("CARGO_MANIFEST_DIR")).join(format!(
-            "../../docs/evidence/T-120/watchdog-test-{}.json",
+            "../../target/evidence/T-120/watchdog-test-{}.json",
             std::process::id()
         ));
         let mut child = std::process::Command::new(std::env::current_exe().unwrap())

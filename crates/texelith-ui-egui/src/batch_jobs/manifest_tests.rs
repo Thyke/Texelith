@@ -3,7 +3,7 @@ use super::*;
 #[test]
 fn retry_and_resume_preserve_unrelated_manifest_and_recovery_sentinels() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-087")
+        .join("../../target/evidence/T-087")
         .join(format!(
             "manifest-regression-{}-{}",
             std::process::id(),

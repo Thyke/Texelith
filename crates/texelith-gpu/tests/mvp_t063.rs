@@ -1,5 +1,4 @@
-//! T-063 independent behavioral contract. Missing production APIs are intentional
-//! red tests; see docs/evidence/T-063/test-contract.md before implementing.
+//! Preview mesh behavioral contracts.
 #[path = "../examples/mvp_support/t063/checks.rs"]
 mod checks;
 #[path = "mvp_t063/report.rs"]

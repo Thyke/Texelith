@@ -1,5 +1,5 @@
-//! Independent f64 oracle and generated fixtures, never a production fallback.
-//! The discretization proposal is recorded in docs/evidence/T-059/test-contract.md.
+//! Independent f64 discretization oracle and generated fixtures.
+//! This reference is never used as a production fallback.
 use std::sync::OnceLock;
 use texelith_core::{Boundary, Extent, SeamlessBase};
 

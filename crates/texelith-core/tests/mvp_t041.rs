@@ -1,5 +1,5 @@
-//! T-041 behavioral contract. Proposed API/wire details are recorded in
-//! docs/evidence/T-041/test-contract.md. No test-only graph implementation.
+//! Typed material graph and canonical cache encoding contracts.
+//! Exercises the production graph implementation.
 use serde_json::{Value, json};
 use texelith_core::{
     Boundary, CacheKey, CacheRevisions, Extent, Graph, GraphDto, InputEdge, InputInterpretation,

@@ -283,7 +283,7 @@ mod tests {
 
     fn directory(name: &str) -> PathBuf {
         let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-            .join("../../docs/evidence/T-019")
+            .join("../../target/evidence/T-019")
             .join(format!("test-{name}-{}", std::process::id()));
         std::fs::create_dir_all(&path).unwrap();
         path

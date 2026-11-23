@@ -185,8 +185,7 @@ fn maps_diagnostic_rejects_unknown_scenarios_and_incomplete_arguments() {
 
 #[test]
 fn cancelled_png_publication_preserves_an_existing_destination() {
-    let dir =
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../target-evidence/T-061/tests");
+    let dir = std::path::Path::new(env!("CARGO_TARGET_TMPDIR")).join("evidence/T-061/tests");
     std::fs::create_dir_all(&dir).unwrap();
     let path = dir.join(format!("publication-{}.png", std::process::id()));
     let before = texelith_io::encode_height_png(1, 1, &[1234]).unwrap();

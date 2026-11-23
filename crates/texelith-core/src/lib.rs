@@ -34,7 +34,7 @@
 //! sorted by ID and validate before producing live state. [`MaterialGraphDto`]
 //! supports explicit validated schema-1 migration. Schema-2 cache encoding uses
 //! [`canonical_material_node_bytes`], preserving schema-1 bytes on the old API.
-//! Its frozen tags and field order are documented in `docs/evidence/T-041/implementation.md`.
+//! Golden-byte tests fix its tags and field order.
 //! Snapshots deliberately have no serde implementation: generations are runtime
 //! state, not diagnostic project data. Command DTOs describe requests and effects;
 //! [`Session`] owns dispatch and parameter-diff history; native I/O remains in

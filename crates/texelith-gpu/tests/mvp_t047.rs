@@ -1,5 +1,4 @@
-//! T-047 behavioral contract. Production work is intentionally left to the
-//! sequential implementer; see docs/evidence/T-047/test-contract.md.
+//! Height preprocessing behavioral contracts.
 
 #[path = "support/abi.rs"]
 #[allow(dead_code)]

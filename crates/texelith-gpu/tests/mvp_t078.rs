@@ -1,5 +1,4 @@
-//! T-078 tests-first contract. The proposed GPU API is documented in
-//! docs/evidence/T-078/test-contract.md; no production stubs are provided.
+//! Selective recalculation and cache reuse behavioral contracts.
 #[path = "mvp_t078/behavior.rs"]
 mod behavior;
 #[path = "mvp_t078/fixtures.rs"]

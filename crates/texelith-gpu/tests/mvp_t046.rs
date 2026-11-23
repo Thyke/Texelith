@@ -1,5 +1,4 @@
-//! T-046 tests-first contract; proposed additive API and red state are documented
-//! in docs/evidence/T-046/test-contract.md. No production stubs live here.
+//! Production material worker behavioral contracts.
 
 #[path = "support/abi.rs"]
 #[allow(dead_code)]

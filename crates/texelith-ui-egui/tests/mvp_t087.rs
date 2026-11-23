@@ -2,8 +2,8 @@ use std::path::PathBuf;
 use texelith_ui_egui::batch_jobs::{InputSelection, enumerate};
 
 fn directory(name: &str) -> PathBuf {
-    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-087")
+    let path = PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+        .join("evidence/T-087")
         .join(format!("{name}-{}", std::process::id()));
     std::fs::create_dir_all(&path).unwrap();
     path
@@ -87,7 +87,7 @@ fn batch_smoke_uses_real_routing_and_checks_cancel_retry_and_bounds() {
             "--size",
             "32",
             "--report",
-            "target-evidence/T-087/test.json",
+            "target/evidence/T-087/test.json",
         ]
         .map(str::to_owned),
     )

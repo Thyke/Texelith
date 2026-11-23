@@ -262,7 +262,7 @@ impl Config {
                 return Err("normal-drag requires --size 4096 and duration 10..=60 seconds".into());
             }
             if config.report.is_none() {
-                config.report = Some("docs/evidence/T-020/single-run.json".into());
+                config.report = Some("target/evidence/T-020/single-run.json".into());
             }
         }
         if config.preview_height && (config.input.is_none() || config.integration_smoke) {

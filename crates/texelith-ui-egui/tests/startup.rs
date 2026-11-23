@@ -48,7 +48,7 @@ fn parses_the_lifetime_acceptance_command() {
         "--frames",
         "600",
         "--report",
-        "docs/evidence/T-013/lifetime-smoke.json",
+        "target/evidence/T-013/lifetime-smoke.json",
     ])
     .unwrap();
     assert!(config.render_smoke && config.replace_texture_every_frame);

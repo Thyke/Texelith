@@ -6,8 +6,8 @@ use texelith_core::*;
 use texelith_ui_egui::{command_adapter::UiAction, controls::Controls, project_batch::AssetChoice};
 
 fn fixture(name: &str) -> (Controls, PathBuf) {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
-        .join("../../target-evidence/T-088/tests")
+    let root = PathBuf::from(env!("CARGO_TARGET_TMPDIR"))
+        .join("evidence/T-088/tests")
         .join(format!("{name}-{}", std::process::id()));
     std::fs::create_dir_all(&root).unwrap();
     let root = std::fs::canonicalize(root).unwrap();
@@ -131,7 +131,7 @@ fn projects_workflow_and_unknown_smoke_names_are_validated() {
             "--mvp-smoke",
             scenario,
             "--report",
-            "target-evidence/T-088/test.json",
+            "target/evidence/T-088/test.json",
         ]
         .map(str::to_owned);
         assert!(texelith_ui_egui::startup::Config::parse(args).is_ok());

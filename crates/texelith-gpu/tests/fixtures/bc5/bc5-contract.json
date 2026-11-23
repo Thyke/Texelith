@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "task": "T-081",
+  "algorithm": "Original MIT BC4 endpoint/index fitting, R block then G block",
+  "format": "BC5_UNORM",
+  "quality": "default: both palette modes at per-channel extrema",
+  "width": 4,
+  "height": 4,
+  "input_normal_xyz": [0.0, 0.0, 1.0],
+  "input_repeat_count": 16,
+  "mips": [
+    { "width": 4, "height": 4, "offset": 0, "byte_len": 16 },
+    { "width": 2, "height": 2, "offset": 16, "byte_len": 16 },
+    { "width": 1, "height": 1, "offset": 32, "byte_len": 16 }
+  ],
+  "block_bytes_each_mip": [128, 128, 0, 0, 0, 0, 0, 0, 128, 128, 0, 0, 0, 0, 0, 0],
+  "expected_decoded_unorm_rg": [0.5019607843137255, 0.5019607843137255],
+  "expected_decoded_normal_xy": [0.00392156862745098, 0.00392156862745098],
+  "expected_z_formula": "sqrt(max(0, 1-x*x-y*y))",
+  "angular_error_degrees": { "p95": 0.31776032874869, "maximum": 0.31776032874869, "tolerance": 0.000001 },
+  "mip_policy": "floor halve each axis, area-average unit vectors, renormalize every mip, replicate edge texels to 4x4 blocks",
+  "indices": "16 row-major 3-bit indices, least significant bits first, little endian",
+  "dds_contract": "DX10 header and DXGI_FORMAT_BC5_UNORM (83) are written by texelith-io::encode_dds_bc5; slice header-free bytes at mip offsets",
+  "smooth_fixture": "normalize([0.6*sin(2*pi*(x+0.5)/w), 0.6*cos(2*pi*(y+0.5)/h), 1])",
+  "smooth_angular_p95_limit_degrees": 5.0,
+  "maximum_quality": "CPU reference +/-4 extrema search, exact rational integer GPU distance; equal-error endpoints may differ from CPU f32 ties",
+  "maximum_quality_cpu_bound": "Summed decoded RG squared error in 8-bit code units <= CPU reference SSE + 1.0; checked on gradients, 23 seeded blocks and two smooth/steep blocks"
+}

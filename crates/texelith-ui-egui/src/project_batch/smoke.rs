@@ -39,7 +39,7 @@ pub fn exercise(config: &Config) -> Result<serde_json::Value, String> {
         .report
         .as_ref()
         .and_then(|p| p.parent())
-        .unwrap_or(std::path::Path::new("target-evidence/T-088"));
+        .unwrap_or(std::path::Path::new("target/evidence/T-088"));
     let root = parent.join(format!(
         "projects-{}-{}",
         std::process::id(),

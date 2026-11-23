@@ -31,7 +31,7 @@ impl Config {
             updates: 10_000,
             budget: 1024 * 1024 * 1024,
             expect_budget_error: false,
-            report: "docs/evidence/T-017/stress.json".into(),
+            report: "target/evidence/T-017/stress.json".into(),
         };
         let mut args = std::env::args().skip(1);
         while let Some(key) = args.next() {

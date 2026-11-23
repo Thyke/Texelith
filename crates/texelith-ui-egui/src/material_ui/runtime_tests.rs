@@ -247,7 +247,7 @@ fn signed_and_hdr_exr_heights_reach_height_normal_and_ao_without_clipping() {
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
     let h = Harness::new();
     let dir =
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../target-evidence/T-061/tests");
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../target/evidence/T-061/tests");
     std::fs::create_dir_all(&dir).unwrap();
     let mut c = Controls::new_material();
     for (id, offset) in [(1, -3.0), (2, 2.0)] {

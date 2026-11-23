@@ -7,7 +7,7 @@ if ($destination -eq $root -or $destination.StartsWith($root + [IO.Path]::Direct
 if (Test-Path -LiteralPath $destination) {
     if (-not (Test-Path -LiteralPath $destination -PathType Container) -or @(Get-ChildItem -Force -LiteralPath $destination).Count) { throw 'Output must be a new or empty directory.' }
 } else { New-Item -ItemType Directory -Path $destination | Out-Null }
-$paths = @('crates', 'Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', 'deny.toml', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'README.md', 'ROADMAP.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md', 'SECURITY.md', 'docs/adr', 'docs/architecture.md', 'docs/ci.md', 'docs/packaging.md', 'docs/licensing.md', 'docs/public-release.md', 'docs/images', 'scripts', 'packaging', '.github', '.gitignore', '.gitattributes')
+$paths = @('crates', 'Cargo.toml', 'Cargo.lock', 'rust-toolchain.toml', '.cargo/config.toml', 'deny.toml', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'README.md', 'ROADMAP.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'CODE_OF_CONDUCT.md', 'SECURITY.md', 'docs/adr', 'docs/architecture.md', 'docs/ci.md', 'docs/packaging.md', 'docs/licensing.md', 'docs/public-release.md', 'docs/images', 'scripts', 'packaging', '.github', '.gitignore', '.gitattributes')
 foreach ($path in $paths) {
     $source = Join-Path $root $path
     if (-not (Test-Path -LiteralPath $source)) { Write-Warning "Missing optional release input: $path"; continue }

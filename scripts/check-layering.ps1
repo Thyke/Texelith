@@ -34,7 +34,7 @@ function CheckWorkflow([string]$workflow) {
         'rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy --target wasm32-unknown-unknown',
         'cargo check -p texelith-core --target wasm32-unknown-unknown --locked',
         'install-linux-ci-deps.ps1',
-        'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683',
+        'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1',
         'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9'
     )
     foreach ($item in $required) { if (-not $workflow.Contains($item)) { $errors += "Missing workflow contract: $item" } }

@@ -196,7 +196,7 @@ pub fn gpu_checks(device: Arc<wgpu::Device>, queue: Arc<wgpu::Queue>) -> Result<
     let kernel = Bc5Kernel::new(&device);
     let pool = Arc::new(Mutex::new(ResourcePool::new(1024 * 1024 * 1024)));
     let contract: serde_json::Value = serde_json::from_str(include_str!(
-        "../../../../../docs/evidence/T-081/bc5-contract.json"
+        "../../../tests/fixtures/bc5/bc5-contract.json"
     ))
     .map_err(|e| e.to_string())?;
     let flat = vec![[0.0, 0.0, 1.0]; 16];

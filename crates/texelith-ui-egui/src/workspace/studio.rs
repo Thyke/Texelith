@@ -635,7 +635,7 @@ mod tests {
         let config = Config::parse(
             [
                 "--ui-snapshot",
-                "docs/evidence/T-147",
+                "target/evidence/T-147",
                 "--studio-snapshots",
                 "--debug-layers",
             ]

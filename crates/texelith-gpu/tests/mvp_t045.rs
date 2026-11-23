@@ -1,5 +1,4 @@
-//! Tests-first T-045 contract. Proposed additive API is described in
-//! docs/evidence/T-045/test-contract.md; no test-local scheduler/planner exists.
+//! Production material scheduler and planner contracts.
 
 #[path = "mvp_t045/material.rs"]
 mod material;

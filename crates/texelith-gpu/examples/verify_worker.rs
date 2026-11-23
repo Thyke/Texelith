@@ -259,14 +259,12 @@ fn main() {
         Ok(report) => report.clone(),
         Err(error) => json!({ "passed": false, "error": error }),
     };
-    std::fs::write(
-        "docs/evidence/T-017/worker-readback.json",
-        serde_json::to_vec_pretty(&report).unwrap(),
-    )
-    .unwrap();
+    let path = std::path::Path::new("target/evidence/T-017/worker-readback.json");
+    std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+    std::fs::write(path, serde_json::to_vec_pretty(&report).unwrap()).unwrap();
     if let Err(error) = result {
         eprintln!("FAIL: {error}");
         std::process::exit(1);
     }
-    println!("PASS: docs/evidence/T-017/worker-readback.json");
+    println!("PASS: target/evidence/T-017/worker-readback.json");
 }

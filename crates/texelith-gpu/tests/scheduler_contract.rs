@@ -1,4 +1,4 @@
-//! Tests-first production seam; see docs/evidence/T-017/test-contract.md.
+//! Production scheduler behavioral contracts.
 mod worker_support;
 
 use std::sync::Arc;
