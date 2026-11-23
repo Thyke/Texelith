@@ -41,7 +41,15 @@ jobs:
       - name: Lint
         run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - name: Tests (CPU; GPU skips are printed)
-        run: cargo test --workspace --locked -- --nocapture
+        run: |
+          cargo test --workspace --locked -- --nocapture 2>&1 | Tee-Object -FilePath test-output.log
+          $code = $LASTEXITCODE
+          if ($code -ne 0) {
+            Select-String -Path test-output.log -Pattern '^test .+ \.\.\. FAILED|panicked at|^error: test failed' -Context 0,3 |
+              Select-Object -First 30 |
+              ForEach-Object { "::error title=Test failure::$((@($_.Line) + $_.Context.PostContext) -join ' | ' -replace '%','%25')" }
+          }
+          exit $code
       - name: Report coverage
         if: always()
         run: |
