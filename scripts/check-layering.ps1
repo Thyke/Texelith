@@ -1,4 +1,4 @@
-﻿param([switch]$SelfTest, [switch]$ValidateWorkflow)
+param([switch]$SelfTest, [switch]$ValidateWorkflow)
 $ErrorActionPreference = 'Stop'
 $allowed = @{ 'texelith-core'=@(); 'texelith-gpu'=@('texelith-core'); 'texelith-io'=@('texelith-core'); 'texelith-ui-egui'=@('texelith-core','texelith-gpu','texelith-io') }
 function PackagePath($root, $name) { return [IO.Path]::GetFullPath((Join-Path $root "crates/$name")).TrimEnd('\','/').ToLowerInvariant() }
@@ -35,7 +35,7 @@ function CheckWorkflow([string]$workflow) {
         'cargo check -p texelith-core --target wasm32-unknown-unknown --locked',
         'install-linux-ci-deps.ps1',
         'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683',
-        'actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a'
+        'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9'
     )
     foreach ($item in $required) { if (-not $workflow.Contains($item)) { $errors += "Missing workflow contract: $item" } }
     $sections = @{}

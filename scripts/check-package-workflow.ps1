@@ -248,7 +248,7 @@ if ($SelfTest) {
     $yaml = Get-Content -LiteralPath $workflowPath -Raw
     $workflowErrors = ValidateWorkflow $yaml
     Assert ($workflowErrors.Count -eq 0) ("Workflow validation failed: " + ($workflowErrors -join '; '))
-    foreach ($mutation in @($yaml.Replace('macos-latest','windows-2022'), $yaml.Replace('actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683','actions/checkout@v4'), $yaml.Replace('target-evidence/T-094/package','tmp/package'), $yaml.Replace('runs-on: ${{ matrix.os }}','runs-on: windows-2022'), $yaml.Replace("if: matrix.platform == 'linux'", "if: false"), $yaml.Replace('bash scripts/package-linux.sh --output','bash missing.sh --output'), $yaml.Replace("tags: ['v*']", "branches: ['main']`n    tags: ['v*']"), $yaml.Replace('uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a', "id: cache`n        uses: actions/cache@v4"), $yaml.Replace('  package:', "  package:`n    if: false"))) { Assert ((ValidateWorkflow $mutation).Count -gt 0) 'Negative workflow fixture was accepted' }
+    foreach ($mutation in @($yaml.Replace('macos-latest','windows-2022'), $yaml.Replace('actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683','actions/checkout@v4'), $yaml.Replace('target-evidence/T-094/package','tmp/package'), $yaml.Replace('runs-on: ${{ matrix.os }}','runs-on: windows-2022'), $yaml.Replace("if: matrix.platform == 'linux'", "if: false"), $yaml.Replace('bash scripts/package-linux.sh --output','bash missing.sh --output'), $yaml.Replace("tags: ['v*']", "branches: ['main']`n    tags: ['v*']"), $yaml.Replace('uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9', "id: cache`n        uses: actions/cache@v4"), $yaml.Replace('  package:', "  package:`n    if: false"))) { Assert ((ValidateWorkflow $mutation).Count -gt 0) 'Negative workflow fixture was accepted' }
     $fixtures = Join-Path $repo 'docs/evidence/T-094/negative-fixtures'
     $workflowFixtures = Get-Content -LiteralPath (Join-Path $fixtures 'workflow-mutations.json') -Raw | ConvertFrom-Json
     foreach ($fixture in $workflowFixtures) {
@@ -267,7 +267,7 @@ if ($SelfTest) {
     }
     # Comments and harmless formatting must remain valid; strings and disabled
     # branches must not stand in for executable statements in the correct step.
-    $positive = $yaml.Replace('name: Native package artifacts', 'name: Native package artifacts # harmless comment').Replace('    runs-on:', '    # runner comment' + "`n" + '    runs-on:').Replace('actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2', 'actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # uses: ignored/unpinned@v1')
+    $positive = $yaml.Replace('name: Native package artifacts', 'name: Native package artifacts # harmless comment').Replace('    runs-on:', '    # runner comment' + "`n" + '    runs-on:').Replace('actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0', 'actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # uses: ignored/unpinned@v1')
     $positive = $positive.Replace('            bash scripts/package-linux.sh', "            # Packaging comment`n            bash scripts/package-linux.sh")
     Assert ((ValidateWorkflow $positive).Count -eq 0) 'Valid YAML comments were rejected'
     $command = 'bash scripts/package-linux.sh --output target-evidence/T-094/package'
