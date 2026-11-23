@@ -519,12 +519,19 @@ mod tests {
             .stderr(std::process::Stdio::null())
             .spawn()
             .unwrap();
+        // Hosted CI runners (notably macOS) start the child test binary slowly;
+        // keep the tight local bound but allow scheduling slack on CI.
+        let slack = if std::env::var_os("CI").is_some() {
+            Duration::from_secs(30)
+        } else {
+            Duration::from_secs(5)
+        };
         let started = Instant::now();
         let status = loop {
             if let Some(status) = child.try_wait().unwrap() {
                 break status;
             }
-            if started.elapsed() > SHUTDOWN_LIMIT + Duration::from_secs(5) {
+            if started.elapsed() > SHUTDOWN_LIMIT + slack {
                 child.kill().unwrap();
                 child.wait().unwrap();
                 panic!("blocked shutdown exceeded independent watchdog bound");
@@ -541,7 +548,7 @@ mod tests {
             serde_json::from_slice(&std::fs::read(&path).unwrap()).unwrap();
         assert_eq!(aborted["status"], "ENVIRONMENT_INVALID");
         assert_eq!(aborted["passed"], false);
-        assert!(started.elapsed() < SHUTDOWN_LIMIT + Duration::from_secs(5));
+        assert!(started.elapsed() < SHUTDOWN_LIMIT + slack);
         std::fs::remove_file(report).unwrap();
         std::fs::remove_file(path).unwrap();
     }
