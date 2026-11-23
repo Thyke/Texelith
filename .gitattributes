@@ -1,0 +1,17 @@
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.exr binary
+*.hdr binary
+*.tga binary
+*.tif binary
+*.tiff binary
+*.ktx2 binary
+*.dds binary
+*.onnx binary
+*.glb binary
+*.ico binary

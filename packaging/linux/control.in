@@ -1,0 +1,10 @@
+Package: texelith
+Version: @VERSION@
+Section: graphics
+Priority: optional
+Architecture: amd64
+Maintainer: Texelith contributors
+Depends: @DEPENDS@
+Installed-Size: @INSTALLED_SIZE@
+Description: Photo to tileable PBR material generator
+ Texelith creates material maps from images using a native GPU renderer.

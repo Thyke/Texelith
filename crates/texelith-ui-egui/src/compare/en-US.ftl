@@ -1,0 +1,36 @@
+plane = Plane
+cube = Cube
+sphere = Sphere
+cylinder = Cylinder
+custom = Custom mesh
+depth = Depth
+exposure = Exposure
+rotation = Seeded rotation
+rotation-warning = Quarter-turn inspection can introduce seams on anisotropic materials. Export remains 1x.
+capture-a = Capture A
+capture-b = Capture B
+compare = Compare
+assets = Mesh / HDRI
+mesh-path = Local .gltf / .glb / .obj
+load-mesh = Load mesh
+hdr-path = Local .hdr / .exr
+load-hdr = Load HDRI
+sky = Procedural sky
+light = Directional light
+orbit = Drag to orbit. Wheel to zoom. Imported geometry uses this material.
+
+tiles = Tiles
+reset-camera = Reset view
+timings = Frame timings
+environment = Environment / lighting
+disabled = disabled
+ibl-enabled = Environment lighting
+sky-background = Sky background
+environment-rotation = Environment rotation
+environment-intensity = Environment intensity
+background-blur = Background blur
+light-direction = Light direction
+
+preview-ball = Preview ball
+rounded-cube = Rounded cube
+turntable = Turntable

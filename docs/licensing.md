@@ -1,0 +1,24 @@
+# Licensing and release inventory
+
+Texelith's original code and documentation are offered under the repository MIT license. Third-party components retain their own licenses; see `THIRD_PARTY_NOTICES.md`. A clean public export must use the allowlist below, and must not assume that an asset with unverified provenance is cleared.
+
+| Asset or data | Origin and license | Release decision |
+|---|---|---|
+| `crates/texelith-gpu/shaders/**/*.wgsl`, `crates/texelith-gpu/src/typed_source.wgsl` | Project shader source; project MIT license, subject to source provenance review. | Include after provenance review. |
+| `crates/texelith-core/presets/*.json`; `crates/texelith-core/tests/fixtures/**`; `crates/texelith-gpu/examples/mvp_support/t121/verification.json` | Project configuration and test data; project MIT license, subject to provenance review. | Include after review for private paths. |
+| `crates/texelith-io/tests/mvp_t077/nfc.json` and generated normalization tables | Generated from Unicode 17 / ICU 78.2 data; Unicode-3.0, text in `crates/texelith-io/src/export_transactions/LICENSE-UNICODE`. | Include with Unicode license. |
+| `crates/texelith-ui-egui/**/*.ftl` | Project localization resources; project MIT license, subject to provenance review. | Include after review. |
+| `crates/texelith-ui-egui/src/workspace/studio.rs` line icons | Identified in source as original Texelith icons; MIT. | Include with project license. |
+| `packaging/{linux,macos,windows}/*.svg`, `packaging/macos/icon.png`, `packaging/windows/texelith.ico` | Original Texelith artwork: hand-written geometric SVGs (< 400 bytes each) created in this repository for the packaging tasks; PNG/ICO are renders of those SVGs. No third-party source. | Include; MIT (project license). |
+| `docs/design/ui-concepts/*.png` | AI-generated concept images; rights not assessed. | Not shipped; excluded from public repo. |
+| `docs/design/T-154-compare.png` | Design comparison image; source and rights not established. | Exclude pending provenance review. |
+| `docs/evidence/**` images, JSON, logs and other artifacts | Historical test captures and reports; underlying inputs and possible private data vary and were not individually verified. | Exclude by default; only individually reviewed, small artifacts may be allowed. |
+| `scripts/policy-fixtures/*` | Project policy test data; project MIT license, subject to provenance review. | Include after review. |
+| egui default fonts and icon font in `epaint_default_fonts` | Third-party assets embedded through dependency features; Noto Emoji (OFL-1.1), Ubuntu Light (Ubuntu font license), Hack (MIT / Bitstream Vera), and egui icon font (MIT). See notices for texts and attribution. | Include only with complete applicable notices; retain all font copyright notices. |
+| Meshes, HDRIs and textures | No standalone tracked mesh or HDRI was identified outside excluded evidence; runtime-generated primitives and user-supplied inputs are not repository assets. | Do not bundle external inputs without a separate rights review. |
+
+The private archive contains internal development notes, design research, old evidence, and potentially identifying paths. None is automatically cleared by the project MIT license. Export only reviewed source, build files, required tests and fixtures, selected public documentation, packaging files whose assets are cleared, and license notices. Exclude private project metadata, design concepts, evidence and transient build output by default. Review the final exported file list and packaged binaries, not just these patterns.
+
+## Outstanding release gates
+
+The dependency inventory is generated from the union of the locked Windows x86-64, Linux x86-64 and macOS arm64 graphs, including build and test dependencies. Several crate archives omit their root license files; these packages are explicitly listed in the notices and their upstream copyright and license notices still need verification. The generator exits nonzero until they are resolved. The Windows executable and installer use `packaging/windows/texelith.ico` (embedded by `crates/texelith-ui-egui/build.rs`); Linux installs `packaging/linux/texelith.svg`; macOS converts `packaging/macos/icon.png` to ICNS. The accompanying Windows and macOS SVGs are design assets, not consumed by those packaging scripts. No separate installer artwork was identified. The checked-in artwork appeared with the platform packaging commits, but that alone does not establish who created the binary images or their rights; replace or verify them before publication. The design comparison combines a concept image and app capture (`docs/evidence/T-154/make-compare.ps1`) and is excluded along with concepts and evidence. These unresolved items prevent a public-release clearance.

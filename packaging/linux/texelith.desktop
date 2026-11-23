@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Texelith
+Comment=Create tileable PBR materials from an image
+Exec=/opt/texelith/texelith-launch %f
+Icon=texelith
+Terminal=false
+Categories=Graphics;2DGraphics;
+MimeType=image/png;image/jpeg;

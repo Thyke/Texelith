@@ -1,0 +1,26 @@
+[package]
+name = "texelith-ui-egui"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository = "https://github.com/Thyke/Texelith"
+description = "Desktop material editor for Texelith"
+readme = "../../README.md"
+keywords = ["pbr", "textures", "materials"]
+categories = ["graphics", "multimedia::images"]
+
+[dependencies]
+texelith-core = { path = "../texelith-core" }
+texelith-gpu = { path = "../texelith-gpu" }
+texelith-io = { path = "../texelith-io" }
+eframe.workspace = true
+rfd.workspace = true
+egui.workspace = true
+egui-wgpu.workspace = true
+wgpu.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+crossbeam-channel.workspace = true
+fluent-bundle.workspace = true
+unic-langid.workspace = true

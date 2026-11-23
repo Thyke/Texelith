@@ -1,0 +1,15 @@
+# Rust
+/target/
+**/target/
+Cargo.lock.bak
+
+# OS / editor
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
+
+# Large evidence artifacts stay local (keep summaries/JSON/small PNG in git)
+docs/evidence/**/*.bmp
+docs/evidence/**/maps/
+target-evidence/

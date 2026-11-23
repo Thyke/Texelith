@@ -1,0 +1,36 @@
+plane = Düzlem
+cube = Küp
+sphere = Küre
+cylinder = Silindir
+custom = Özel model
+depth = Derinlik
+exposure = Pozlama
+rotation = Tohumlu döndürme
+rotation-warning = Çeyrek tur inceleme anizotropik malzemelerde dikiş oluşturabilir. Dışa aktarma 1x kalır.
+capture-a = A'yı yakala
+capture-b = B'yi yakala
+compare = Karşılaştır
+assets = Model / HDRI
+mesh-path = Yerel .gltf / .glb / .obj
+load-mesh = Model yükle
+hdr-path = Yerel .hdr / .exr
+load-hdr = HDRI yükle
+sky = Prosedürel gökyüzü
+light = Yönlü ışık
+orbit = Yörünge için sürükleyin. Tekerlek ile yakınlaştırın. Model bu malzemeyi kullanır.
+
+tiles = Döşeme
+reset-camera = Görünümü sıfırla
+timings = Kare süreleri
+environment = Ortam / aydınlatma
+disabled = kapalı
+ibl-enabled = Ortam aydınlatması
+sky-background = Gökyüzü arka planı
+environment-rotation = Ortam dönüşü
+environment-intensity = Ortam şiddeti
+background-blur = Arka plan bulanıklığı
+light-direction = Işık yönü
+
+preview-ball = ?nizleme k?resi
+rounded-cube = Yuvarlat?lm?? k?p
+turntable = Otomatik d?nd?r

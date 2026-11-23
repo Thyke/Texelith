@@ -1,0 +1,223 @@
+{
+  "profile": {
+    "id": "godot-v1",
+    "revision": 1,
+    "engine_safe_srgb": true,
+    "normal_convention": "OpenGl"
+  },
+  "naming": "T_{name}_{map}",
+  "size": "Keep",
+  "padding": "Repeat",
+  "displacement": {
+    "midlevel": 0.5,
+    "scale": 1.0,
+    "units": "Unitless"
+  },
+  "outputs": [
+    {
+      "name": "albedo",
+      "format": "Png8",
+      "channels": [
+        {
+          "source": {
+            "Map": {
+              "map": "Albedo",
+              "component": "R",
+              "missing": "Error"
+            }
+          },
+          "invert": false,
+          "transfer": "Srgb"
+        },
+        {
+          "source": {
+            "Map": {
+              "map": "Albedo",
+              "component": "G",
+              "missing": "Error"
+            }
+          },
+          "invert": false,
+          "transfer": "Srgb"
+        },
+        {
+          "source": {
+            "Map": {
+              "map": "Albedo",
+              "component": "B",
+              "missing": "Error"
+            }
+          },
+          "invert": false,
+          "transfer": "Srgb"
+        }
+      ],
+      "quantization": {
+        "clamp_min": 0.0,
+        "clamp_max": 1.0,
+        "dither": "None"
+      },
+      "import_hints": {
+        "color_tag": "Srgb",
+        "normal_map": false,
+        "normal_compression": false,
+        "assignments": [
+          {
+            "usage": "Albedo",
+            "component": "R"
+          },
+          {
+            "usage": "Albedo",
+            "component": "G"
+          },
+          {
+            "usage": "Albedo",
+            "component": "B"
+          }
+        ],
+        "instructions": [
+          "Import as sRGB color texture."
+        ]
+      }
+    },
+    {
+      "name": "normal",
+      "format": "Png8",
+      "channels": [
+        {
+          "source": {
+            "Map": {
+              "map": "Normal",
+              "component": "R",
+              "missing": "Error"
+            }
+          },
+          "invert": false,
+          "transfer": "Linear"
+        },
+        {
+          "source": {
+            "Map": {
+              "map": "Normal",
+              "component": "G",
+              "missing": "Error"
+            }
+          },
+          "invert": false,
+          "transfer": "Linear"
+        },
+        {
+          "source": {
+            "Map": {
+              "map": "Normal",
+              "component": "B",
+              "missing": "Error"
+            }
+          },
+          "invert": false,
+          "transfer": "Linear"
+        }
+      ],
+      "quantization": {
+        "clamp_min": 0.0,
+        "clamp_max": 1.0,
+        "dither": "None"
+      },
+      "import_hints": {
+        "color_tag": "Linear",
+        "normal_map": true,
+        "normal_compression": false,
+        "assignments": [
+          {
+            "usage": "Normal",
+            "component": "R"
+          },
+          {
+            "usage": "Normal",
+            "component": "G"
+          },
+          {
+            "usage": "Normal",
+            "component": "B"
+          }
+        ],
+        "instructions": [
+          "OpenGL normal green orientation.",
+          "Disable sRGB; import as a normal map."
+        ]
+      }
+    },
+    {
+      "name": "orm",
+      "format": "Png8",
+      "channels": [
+        {
+          "source": {
+            "Map": {
+              "map": "Ao",
+              "component": "R",
+              "missing": {
+                "Constant": 1.0
+              }
+            }
+          },
+          "invert": false,
+          "transfer": "Linear"
+        },
+        {
+          "source": {
+            "Map": {
+              "map": "Roughness",
+              "component": "R",
+              "missing": {
+                "Constant": 1.0
+              }
+            }
+          },
+          "invert": false,
+          "transfer": "Linear"
+        },
+        {
+          "source": {
+            "Map": {
+              "map": "Metallic",
+              "component": "R",
+              "missing": {
+                "Constant": 1.0
+              }
+            }
+          },
+          "invert": false,
+          "transfer": "Linear"
+        }
+      ],
+      "quantization": {
+        "clamp_min": 0.0,
+        "clamp_max": 1.0,
+        "dither": "None"
+      },
+      "import_hints": {
+        "color_tag": "Linear",
+        "normal_map": false,
+        "normal_compression": false,
+        "assignments": [
+          {
+            "usage": "Occlusion",
+            "component": "R"
+          },
+          {
+            "usage": "Roughness",
+            "component": "G"
+          },
+          {
+            "usage": "Metallic",
+            "component": "B"
+          }
+        ],
+        "instructions": [
+          "ORM RGB: ambient occlusion, roughness, metallic; linear data."
+        ]
+      }
+    }
+  ]
+}

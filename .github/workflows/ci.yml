@@ -1,0 +1,102 @@
+name: CI
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: pwsh
+env:
+  CARGO_TERM_COLOR: always
+  # Hosted jobs provide CPU coverage, never a hardware GPU/performance claim.
+  TEXELITH_CI_NO_GPU: '1'
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install Linux native prerequisites
+        if: runner.os == 'Linux'
+        run: ./scripts/install-linux-ci-deps.ps1
+      - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: native-${{ runner.os }}-${{ runner.arch }}-1.99.1-${{ hashFiles('**/Cargo.lock', 'rust-toolchain.toml', '.cargo/config.toml') }}
+      - name: Install pinned Rust toolchain
+        run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy --target wasm32-unknown-unknown
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Lint
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - name: Tests (CPU; GPU skips are printed)
+        run: cargo test --workspace --locked -- --nocapture
+      - name: Report coverage
+        if: always()
+        run: |
+          'CPU build/tests only. GPU checks: SKIPPED (no GPU adapter; TEXELITH_CI_NO_GPU=1). Native window/performance gates: not run.' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin/cargo-deny
+          key: policy-${{ runner.os }}-${{ runner.arch }}-1.99.1-deny-0.18.2-${{ hashFiles('**/Cargo.lock', 'rust-toolchain.toml') }}
+      - name: Install pinned Rust toolchain
+        run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt --component clippy --target wasm32-unknown-unknown
+      - name: Install policy tool
+        run: |
+          if (-not (Get-Command cargo-deny -ErrorAction SilentlyContinue)) {
+            cargo install cargo-deny --version 0.18.2 --locked
+            if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          }
+      - name: Layering and dependency policy
+        run: |
+          ./scripts/check-layering.ps1 -SelfTest
+          if (-not $?) { exit 1 }
+          ./scripts/check-layering.ps1 -ValidateWorkflow
+          if (-not $?) { exit 1 }
+          ./scripts/check-layering.ps1
+          if (-not $?) { exit 1 }
+          ./scripts/check-dependencies.ps1 -SelfTest
+          if (-not $?) { exit 1 }
+          ./scripts/check-dependencies.ps1
+          if (-not $?) { exit 1 }
+          cargo deny check licenses bans sources
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+  portability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install Linux native prerequisites
+        run: ./scripts/install-linux-ci-deps.ps1
+      - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: portability-${{ runner.os }}-${{ runner.arch }}-1.95.0-1.99.1-${{ hashFiles('**/Cargo.lock', 'rust-toolchain.toml', '.cargo/config.toml') }}
+      - name: Install MSRV
+        run: rustup toolchain install 1.95.0 --profile minimal
+      - name: MSRV
+        run: cargo +1.95.0 check --workspace --all-targets --locked
+      - name: Install wasm target for pinned toolchain
+        run: rustup target add wasm32-unknown-unknown
+      - name: Core wasm
+        run: cargo check -p texelith-core --target wasm32-unknown-unknown --locked

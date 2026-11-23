@@ -1,0 +1,116 @@
+name: Native package artifacts
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: pwsh
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            os: windows-2022
+          - platform: macos
+            os: macos-latest
+          - platform: linux
+            os: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a # v4.1.2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: package-${{ matrix.os }}-${{ runner.arch }}-1.99.1-${{ hashFiles('**/Cargo.lock', 'rust-toolchain.toml', '.cargo/config.toml') }}
+      - name: Install Linux package tools
+        if: runner.os == 'Linux'
+        run: |
+          ./scripts/install-linux-ci-deps.ps1
+          if (-not $?) { exit 1 }
+          $packages = @('dpkg-dev','fakeroot')
+          sudo apt-get install -y @packages
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+      - name: Record Windows build tools and licenses
+        if: matrix.platform == 'windows'
+        run: |
+          $dir = 'target-evidence/T-094/package'
+          New-Item -ItemType Directory -Force $dir | Out-Null
+          @("OS: $([Environment]::OSVersion.VersionString)", "PowerShell: $($PSVersionTable.PSVersion) (MIT)", "Rust: $(rustc --version)", "Cargo: $(cargo --version)", "Rust/Cargo licenses: MIT OR Apache-2.0", "Windows native tools: supplied by runner; not bundled", "Runtime license inventory: LICENSE and THIRD_PARTY_NOTICES.md in ZIP", "Minimum OS: Windows 10; target: x86_64-pc-windows-msvc") | Set-Content (Join-Path $dir 'build-inventory.txt')
+      - name: Build and verify Windows package
+        id: windows
+        continue-on-error: true
+        if: matrix.platform == 'windows'
+        run: |
+          New-Item -ItemType Directory -Force 'target-evidence/T-094/package' | Out-Null
+          Start-Transcript -Path 'target-evidence/T-094/package/verification.log'
+          try {
+            ./scripts/package-windows.ps1 -Verify -OutputDir target-evidence/T-094/package
+            if ($LASTEXITCODE) { throw "Package command failed: $LASTEXITCODE" }
+          } finally { Stop-Transcript }
+
+      - name: Build macOS package
+        id: macos
+        continue-on-error: true
+        if: matrix.platform == 'macos'
+        run: |
+          New-Item -ItemType Directory -Force 'target-evidence/T-094/package' | Out-Null
+          Start-Transcript -Path 'target-evidence/T-094/package/verification.log'
+          try {
+            bash scripts/package-macos.sh --output target-evidence/T-094/package
+            if ($LASTEXITCODE) { throw "Package command failed: $LASTEXITCODE" }
+          } finally { Stop-Transcript }
+
+      - name: Build Linux package
+        id: linux
+        continue-on-error: true
+        if: matrix.platform == 'linux'
+        run: |
+          New-Item -ItemType Directory -Force 'target-evidence/T-094/package' | Out-Null
+          Start-Transcript -Path 'target-evidence/T-094/package/verification.log'
+          try {
+            bash scripts/package-linux.sh --output target-evidence/T-094/package
+            if ($LASTEXITCODE) { throw "Package command failed: $LASTEXITCODE" }
+          } finally { Stop-Transcript }
+
+      - name: Write build identity and status report
+        if: always()
+        env:
+          PACKAGE_PLATFORM: ${{ matrix.platform }}
+          PACKAGE_REVISION: ${{ github.sha }}
+          WINDOWS_OUTCOME: ${{ steps.windows.outcome }}
+          MACOS_OUTCOME: ${{ steps.macos.outcome }}
+          LINUX_OUTCOME: ${{ steps.linux.outcome }}
+        run: |
+          $dir = 'target-evidence/T-094/package'
+          New-Item -ItemType Directory -Force $dir | Out-Null
+          $outcome = @{ windows = $env:WINDOWS_OUTCOME; macos = $env:MACOS_OUTCOME; linux = $env:LINUX_OUTCOME }[$env:PACKAGE_PLATFORM]
+          $names = @{ windows = 'Texelith-0.1.0-windows-x64.zip'; macos = 'Texelith-macos-arm64.dmg'; linux = @(Get-ChildItem $dir -Filter 'texelith_*_amd64.deb' | Select-Object -ExpandProperty Name) }
+          $candidates = @($names[$env:PACKAGE_PLATFORM]); $artifact = $null
+          if ($candidates.Count -eq 1 -and $candidates[0]) { $artifact = Get-Item (Join-Path $dir $candidates[0]) -ErrorAction SilentlyContinue }
+          $ok = $outcome -eq 'success'
+          $operation = if ($ok) { @{ status = 'pass'; exit_code = 0 } } else { @{ status = 'not_run'; exit_code = $null } }
+          $unrun = @{ status = 'not_run'; exit_code = $null }
+          $launch = $unrun
+          $install = if ($env:PACKAGE_PLATFORM -eq 'windows') { $operation } else { $unrun }
+          $inventory = @(Get-ChildItem $dir -File | Where-Object Name -ne 'report.json' | ForEach-Object { @{ name = $_.Name; size_bytes = $_.Length } })
+          $artifactInfo = $null
+          if ($artifact) { $artifactInfo = @{ name = $artifact.Name; size_bytes = $artifact.Length; sha256 = (Get-FileHash $artifact.FullName -Algorithm SHA256).Hash.ToLowerInvariant() } }
+          $report = @{ schema = 1; platform = $env:PACKAGE_PLATFORM; os = @{windows='windows';macos='macos';linux='linux'}[$env:PACKAGE_PLATFORM]; architecture = @{windows='x86_64';macos='aarch64';linux='x86_64'}[$env:PACKAGE_PLATFORM]; revision = $env:PACKAGE_REVISION; artifact = $artifactInfo; inventory = $inventory; verification = @{ status = $outcome; exit_code = $(if ($ok) { 0 } else { $null }) }; operations = @{ install = $install; uninstall = $install; launch = $launch }; gpu = 'not_run'; signing = $(if ($ok -and $env:PACKAGE_PLATFORM -eq 'macos') { 'ad_hoc' } else { 'unsigned' }) }
+          $report | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 (Join-Path $dir 'report.json')
+          "## $env:PACKAGE_PLATFORM package`n`n- Package build: $outcome`n- Native launch: not_run`n- GPU: not_run`n- Signing: $($report.signing)" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          if (-not $ok -or -not $artifact -or $artifact.Length -ge 50000000) { throw 'Package verification or 50,000,000 byte gate failed' }
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: texelith-${{ matrix.platform }}-${{ github.sha }}
+          path: target-evidence/T-094/package/
+          if-no-files-found: error
+          retention-days: 30

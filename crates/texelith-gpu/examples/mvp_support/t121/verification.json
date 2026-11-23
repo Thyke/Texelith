@@ -1,0 +1,774 @@
+{
+  "task": "T-121",
+  "base_revision": "da66834bd7b614249a0c0ef6ef5870d14f8b240f",
+  "implementation": "single macro registry; node-local adapters, typed state/eviction, suites and optional report validators; per-output cache/liveness bookkeeping",
+  "acceptance": "failed: height default (+20.44%) and maximum-quality (+7.40%) median regressions exceed 5 percent",
+  "dependencies_added": [],
+  "existing_test_assertions_changed": false,
+  "shader_math_changed": false,
+  "checks": {
+    "workspace_tests": {
+      "command": "cargo test --workspace --locked --offline",
+      "passed": true,
+      "passed_tests": 702,
+      "ignored_tests": 1,
+      "ignored": "perf_metrics_completed_proxies_survive_the_next_input (interactive Windows/RTX gate)",
+      "log": "target-evidence/T-121/tests-final.log"
+    },
+    "clippy": {
+      "command": "cargo clippy --workspace --all-targets --locked --offline -- -D warnings",
+      "passed": true,
+      "log": "target-evidence/T-121/clippy-final.log"
+    },
+    "format": {
+      "command": "cargo fmt --all -- --check; rustfmt --edition 2024 --config skip_children=true --check <changed macro-declared runtime/suite files>",
+      "passed": true
+    },
+    "layering": {
+      "command": "powershell -NoProfile -File scripts/check-layering.ps1 -SelfTest",
+      "passed": true
+    },
+    "native_gate": {
+      "command": "scripts/measure-faz0.ps1",
+      "result": "deferred to orchestrator"
+    }
+  },
+  "test_environment": {
+    "CARGO_INCREMENTAL": "0 (avoid sandbox hard-link warnings)",
+    "TEMP_TMP": "<worktree>/target-evidence/T-121/tmp",
+    "initial_test_failure": "Default external temp directory: texelith-io writes_require_explicit_overwrite_and_preserve_existing_on_failure, Windows Access denied at image_contract.rs:202; full workspace reruns with worktree temp passed without test or IO edits."
+  },
+  "measurement": {
+    "adapter": "NVIDIA GeForce RTX 5070 Ti",
+    "backend": "dx12",
+    "size": 4096,
+    "kind": "completion_upper_bound",
+    "warmups_per_run": 10,
+    "measurements_per_run": 100,
+    "command": "<before-or-after-release-exe> --suite <suite> --size 4096 --backend dx12 --adapter-name \"RTX 5070 Ti\" --report target-evidence/T-121/paired-<round>-<variant>-<suite>.json",
+    "method": "Three serial paired runs, reverse order in round 2; no agent-launched builds or other GPU tests overlap. Compare median p95 per binary. Height got two additional predefined pairs after its three-pair result failed amid large variation; all original observations retained.",
+    "excluded_preliminary_runs": "before-*.json / after-*.json retained but excluded from the paired comparison: a development build overlapped part of the first baseline run.",
+    "before_executable": {
+      "path": "target-evidence/T-121/verify_mvp-before.exe",
+      "sha256": "a5bff786e784e73dc0fae0f2ff237511471e90fc4efae523ff763b2a0511f1be"
+    },
+    "after_executable": {
+      "path": "target/release/examples/verify_mvp.exe",
+      "sha256": "b4f0cf033f6d041d761d5b79074af62ad5535bcf04cf78cd7a57c15c5396e154"
+    },
+    "regression_gate_passed": false,
+    "individual_absolute_16ms_failures": [
+      {
+        "suite": "height",
+        "round": 1,
+        "variant": "before",
+        "failure": "p95 must be below 16 ms"
+      },
+      {
+        "suite": "height",
+        "round": 1,
+        "variant": "after",
+        "failure": "p95 must be below 16 ms"
+      },
+      {
+        "suite": "height",
+        "round": 4,
+        "variant": "after",
+        "failure": "p95 must be below 16 ms"
+      },
+      {
+        "suite": "poisson_operators",
+        "round": 1,
+        "variant": "before",
+        "failure": "p95 must be below 16 ms"
+      },
+      {
+        "suite": "poisson_operators",
+        "round": 1,
+        "variant": "after",
+        "failure": "p95 must be below 16 ms"
+      }
+    ],
+    "results": [
+      {
+        "suite": "height",
+        "pairs": [
+          {
+            "round": 1,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-1-before-height.json",
+              "passed": false,
+              "default_p95_ms": 24.520799999999998,
+              "maximum_p95_ms": 25.1153,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-1-after-height.json",
+              "passed": false,
+              "default_p95_ms": 25.083000000000002,
+              "maximum_p95_ms": 25.980900000000002,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            }
+          },
+          {
+            "round": 2,
+            "order": [
+              "after",
+              "before"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-2-before-height.json",
+              "passed": true,
+              "default_p95_ms": 9.9087,
+              "maximum_p95_ms": 10.383,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-2-after-height.json",
+              "passed": true,
+              "default_p95_ms": 11.719,
+              "maximum_p95_ms": 10.2146,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            }
+          },
+          {
+            "round": 3,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-3-before-height.json",
+              "passed": true,
+              "default_p95_ms": 8.0306,
+              "maximum_p95_ms": 8.102500000000001,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-3-after-height.json",
+              "passed": true,
+              "default_p95_ms": 7.5298,
+              "maximum_p95_ms": 7.8192,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            }
+          },
+          {
+            "round": 4,
+            "order": [
+              "after",
+              "before"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-4-before-height.json",
+              "passed": true,
+              "default_p95_ms": 9.4648,
+              "maximum_p95_ms": 9.5105,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-4-after-height.json",
+              "passed": false,
+              "default_p95_ms": 25.1627,
+              "maximum_p95_ms": 32.8055,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            }
+          },
+          {
+            "round": 5,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-5-before-height.json",
+              "passed": true,
+              "default_p95_ms": 9.7305,
+              "maximum_p95_ms": 9.1164,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-5-after-height.json",
+              "passed": true,
+              "default_p95_ms": 9.3927,
+              "maximum_p95_ms": 8.6148,
+              "manifest_hash": "ccdb7fec1e74a752b0c2c6184c220201e032d8a179d15673f237cbcc0ea0cfa3",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 447397288
+            }
+          }
+        ],
+        "median_comparison": {
+          "default": {
+            "before_median_p95_ms": 9.7305,
+            "after_median_p95_ms": 11.719,
+            "change_percent": 20.43574328143467,
+            "within_5_percent": false
+          },
+          "maximum": {
+            "before_median_p95_ms": 9.5105,
+            "after_median_p95_ms": 10.2146,
+            "change_percent": 7.403396246254146,
+            "within_5_percent": false
+          }
+        },
+        "manifest_hashes_unchanged": true,
+        "numerical_checks_all_passed": true,
+        "initial_three_pair_default_comparison": {
+          "before_median_p95_ms": 9.9087,
+          "after_median_p95_ms": 11.719,
+          "change_percent": 18.269803304167056,
+          "within_5_percent": false
+        }
+      },
+      {
+        "suite": "normal",
+        "pairs": [
+          {
+            "round": 1,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-1-before-normal.json",
+              "passed": true,
+              "default_p95_ms": 9.827300000000001,
+              "maximum_p95_ms": 468.2131,
+              "manifest_hash": "c25b3cca9ca16961fe402f59cf2d24ea4101c5ebf4f891c3c48f6c0cf64bf174",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 268435456,
+              "legacy_p95_ms": 8.2614
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-1-after-normal.json",
+              "passed": true,
+              "default_p95_ms": 10.5724,
+              "maximum_p95_ms": 456.6457,
+              "manifest_hash": "c25b3cca9ca16961fe402f59cf2d24ea4101c5ebf4f891c3c48f6c0cf64bf174",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 268435456,
+              "legacy_p95_ms": 8.564300000000001
+            }
+          },
+          {
+            "round": 2,
+            "order": [
+              "after",
+              "before"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-2-before-normal.json",
+              "passed": true,
+              "default_p95_ms": 5.3579,
+              "maximum_p95_ms": 126.1808,
+              "manifest_hash": "c25b3cca9ca16961fe402f59cf2d24ea4101c5ebf4f891c3c48f6c0cf64bf174",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 268435456,
+              "legacy_p95_ms": 0.9333
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-2-after-normal.json",
+              "passed": true,
+              "default_p95_ms": 4.9355,
+              "maximum_p95_ms": 127.10810000000001,
+              "manifest_hash": "c25b3cca9ca16961fe402f59cf2d24ea4101c5ebf4f891c3c48f6c0cf64bf174",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 268435456,
+              "legacy_p95_ms": 0.7789999999999999
+            }
+          },
+          {
+            "round": 3,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-3-before-normal.json",
+              "passed": true,
+              "default_p95_ms": 4.1621999999999995,
+              "maximum_p95_ms": 126.19430000000001,
+              "manifest_hash": "c25b3cca9ca16961fe402f59cf2d24ea4101c5ebf4f891c3c48f6c0cf64bf174",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 268435456,
+              "legacy_p95_ms": 1.0225
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-3-after-normal.json",
+              "passed": true,
+              "default_p95_ms": 3.9011,
+              "maximum_p95_ms": 126.4063,
+              "manifest_hash": "c25b3cca9ca16961fe402f59cf2d24ea4101c5ebf4f891c3c48f6c0cf64bf174",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 268435456,
+              "legacy_p95_ms": 1.0156
+            }
+          }
+        ],
+        "median_comparison": {
+          "default": {
+            "before_median_p95_ms": 5.3579,
+            "after_median_p95_ms": 4.9355,
+            "change_percent": -7.883685772410831,
+            "within_5_percent": true
+          },
+          "maximum": {
+            "before_median_p95_ms": 126.19430000000001,
+            "after_median_p95_ms": 127.10810000000001,
+            "change_percent": 0.7241214539800866,
+            "within_5_percent": true
+          }
+        },
+        "manifest_hashes_unchanged": true,
+        "numerical_checks_all_passed": true
+      },
+      {
+        "suite": "poisson_operators",
+        "pairs": [
+          {
+            "round": 1,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-1-before-poisson_operators.json",
+              "passed": false,
+              "default_p95_ms": 33.2319,
+              "maximum_p95_ms": 132.47410000000002,
+              "manifest_hash": "d9e3230cbd50f7451173842c9ea42f37331afa9fb495ffbdd7453f5a688e4bf6",
+              "checks_passed": true,
+              "check_count": 19,
+              "default_peak_bytes": 540265484
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-1-after-poisson_operators.json",
+              "passed": false,
+              "default_p95_ms": 21.8297,
+              "maximum_p95_ms": 21.464299999999998,
+              "manifest_hash": "d9e3230cbd50f7451173842c9ea42f37331afa9fb495ffbdd7453f5a688e4bf6",
+              "checks_passed": true,
+              "check_count": 19,
+              "default_peak_bytes": 540265484
+            }
+          },
+          {
+            "round": 2,
+            "order": [
+              "after",
+              "before"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-2-before-poisson_operators.json",
+              "passed": true,
+              "default_p95_ms": 11.0613,
+              "maximum_p95_ms": 19.9006,
+              "manifest_hash": "d9e3230cbd50f7451173842c9ea42f37331afa9fb495ffbdd7453f5a688e4bf6",
+              "checks_passed": true,
+              "check_count": 19,
+              "default_peak_bytes": 540265484
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-2-after-poisson_operators.json",
+              "passed": true,
+              "default_p95_ms": 10.9851,
+              "maximum_p95_ms": 20.3002,
+              "manifest_hash": "d9e3230cbd50f7451173842c9ea42f37331afa9fb495ffbdd7453f5a688e4bf6",
+              "checks_passed": true,
+              "check_count": 19,
+              "default_peak_bytes": 540265484
+            }
+          },
+          {
+            "round": 3,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-3-before-poisson_operators.json",
+              "passed": true,
+              "default_p95_ms": 11.0161,
+              "maximum_p95_ms": 19.9498,
+              "manifest_hash": "d9e3230cbd50f7451173842c9ea42f37331afa9fb495ffbdd7453f5a688e4bf6",
+              "checks_passed": true,
+              "check_count": 19,
+              "default_peak_bytes": 540265484
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-3-after-poisson_operators.json",
+              "passed": true,
+              "default_p95_ms": 10.8253,
+              "maximum_p95_ms": 20.2642,
+              "manifest_hash": "d9e3230cbd50f7451173842c9ea42f37331afa9fb495ffbdd7453f5a688e4bf6",
+              "checks_passed": true,
+              "check_count": 19,
+              "default_peak_bytes": 540265484
+            }
+          }
+        ],
+        "median_comparison": {
+          "default": {
+            "before_median_p95_ms": 11.0613,
+            "after_median_p95_ms": 10.9851,
+            "change_percent": -0.6888882861869727,
+            "within_5_percent": true
+          },
+          "maximum": {
+            "before_median_p95_ms": 19.9498,
+            "after_median_p95_ms": 20.3002,
+            "change_percent": 1.7564085855497291,
+            "within_5_percent": true
+          }
+        },
+        "manifest_hashes_unchanged": true,
+        "numerical_checks_all_passed": true
+      },
+      {
+        "suite": "roughness",
+        "pairs": [
+          {
+            "round": 1,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-1-before-roughness.json",
+              "passed": true,
+              "default_p95_ms": 0.7573000000000001,
+              "maximum_p95_ms": 1.0393,
+              "manifest_hash": "cdbf94345941f0cc2cd688f898e738df3b897ef096f495e9425f807c955bbe08",
+              "checks_passed": true,
+              "check_count": 22,
+              "default_peak_bytes": 469762816
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-1-after-roughness.json",
+              "passed": true,
+              "default_p95_ms": 0.7328,
+              "maximum_p95_ms": 0.9504,
+              "manifest_hash": "cdbf94345941f0cc2cd688f898e738df3b897ef096f495e9425f807c955bbe08",
+              "checks_passed": true,
+              "check_count": 22,
+              "default_peak_bytes": 469762816
+            }
+          },
+          {
+            "round": 2,
+            "order": [
+              "after",
+              "before"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-2-before-roughness.json",
+              "passed": true,
+              "default_p95_ms": 0.924,
+              "maximum_p95_ms": 1.2102,
+              "manifest_hash": "cdbf94345941f0cc2cd688f898e738df3b897ef096f495e9425f807c955bbe08",
+              "checks_passed": true,
+              "check_count": 22,
+              "default_peak_bytes": 469762816
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-2-after-roughness.json",
+              "passed": true,
+              "default_p95_ms": 0.5589,
+              "maximum_p95_ms": 1.0853,
+              "manifest_hash": "cdbf94345941f0cc2cd688f898e738df3b897ef096f495e9425f807c955bbe08",
+              "checks_passed": true,
+              "check_count": 22,
+              "default_peak_bytes": 469762816
+            }
+          },
+          {
+            "round": 3,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-3-before-roughness.json",
+              "passed": true,
+              "default_p95_ms": 0.736,
+              "maximum_p95_ms": 1.221,
+              "manifest_hash": "cdbf94345941f0cc2cd688f898e738df3b897ef096f495e9425f807c955bbe08",
+              "checks_passed": true,
+              "check_count": 22,
+              "default_peak_bytes": 469762816
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-3-after-roughness.json",
+              "passed": true,
+              "default_p95_ms": 0.731,
+              "maximum_p95_ms": 1.0552000000000001,
+              "manifest_hash": "cdbf94345941f0cc2cd688f898e738df3b897ef096f495e9425f807c955bbe08",
+              "checks_passed": true,
+              "check_count": 22,
+              "default_peak_bytes": 469762816
+            }
+          }
+        ],
+        "median_comparison": {
+          "default": {
+            "before_median_p95_ms": 0.7573000000000001,
+            "after_median_p95_ms": 0.731,
+            "change_percent": -3.47286412254062,
+            "within_5_percent": true
+          },
+          "maximum": {
+            "before_median_p95_ms": 1.2102,
+            "after_median_p95_ms": 1.0552000000000001,
+            "change_percent": -12.807800363576249,
+            "within_5_percent": true
+          }
+        },
+        "manifest_hashes_unchanged": true,
+        "numerical_checks_all_passed": true
+      },
+      {
+        "suite": "ao",
+        "pairs": [
+          {
+            "round": 1,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-1-before-ao.json",
+              "passed": true,
+              "default_p95_ms": 10.0949,
+              "maximum_p95_ms": 382.447,
+              "manifest_hash": "eb035321cf0f4bc7af18c0067d14b4ad74ee67512f0ebb6322abb2718860fb2b",
+              "checks_passed": true,
+              "check_count": 14,
+              "default_peak_bytes": 201330816
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-1-after-ao.json",
+              "passed": true,
+              "default_p95_ms": 9.9541,
+              "maximum_p95_ms": 403.9766,
+              "manifest_hash": "eb035321cf0f4bc7af18c0067d14b4ad74ee67512f0ebb6322abb2718860fb2b",
+              "checks_passed": true,
+              "check_count": 14,
+              "default_peak_bytes": 201330816
+            }
+          },
+          {
+            "round": 2,
+            "order": [
+              "after",
+              "before"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-2-before-ao.json",
+              "passed": true,
+              "default_p95_ms": 8.661200000000001,
+              "maximum_p95_ms": 369.27700000000004,
+              "manifest_hash": "eb035321cf0f4bc7af18c0067d14b4ad74ee67512f0ebb6322abb2718860fb2b",
+              "checks_passed": true,
+              "check_count": 14,
+              "default_peak_bytes": 201330816
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-2-after-ao.json",
+              "passed": true,
+              "default_p95_ms": 9.4181,
+              "maximum_p95_ms": 384.7493,
+              "manifest_hash": "eb035321cf0f4bc7af18c0067d14b4ad74ee67512f0ebb6322abb2718860fb2b",
+              "checks_passed": true,
+              "check_count": 14,
+              "default_peak_bytes": 201330816
+            }
+          },
+          {
+            "round": 3,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-3-before-ao.json",
+              "passed": true,
+              "default_p95_ms": 10.3681,
+              "maximum_p95_ms": 384.6241,
+              "manifest_hash": "eb035321cf0f4bc7af18c0067d14b4ad74ee67512f0ebb6322abb2718860fb2b",
+              "checks_passed": true,
+              "check_count": 14,
+              "default_peak_bytes": 201330816
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-3-after-ao.json",
+              "passed": true,
+              "default_p95_ms": 8.4265,
+              "maximum_p95_ms": 375.0815,
+              "manifest_hash": "eb035321cf0f4bc7af18c0067d14b4ad74ee67512f0ebb6322abb2718860fb2b",
+              "checks_passed": true,
+              "check_count": 14,
+              "default_peak_bytes": 201330816
+            }
+          }
+        ],
+        "median_comparison": {
+          "default": {
+            "before_median_p95_ms": 10.0949,
+            "after_median_p95_ms": 9.4181,
+            "change_percent": -6.704375476725877,
+            "within_5_percent": true
+          },
+          "maximum": {
+            "before_median_p95_ms": 382.447,
+            "after_median_p95_ms": 384.7493,
+            "change_percent": 0.6019919099901516,
+            "within_5_percent": true
+          }
+        },
+        "manifest_hashes_unchanged": true,
+        "numerical_checks_all_passed": true
+      },
+      {
+        "suite": "seamless_offset",
+        "pairs": [
+          {
+            "round": 1,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-1-before-seamless_offset.json",
+              "passed": true,
+              "default_p95_ms": 7.353,
+              "maximum_p95_ms": 7.7919,
+              "manifest_hash": "913a00b189bb89155af0957b12c30a3ad199684b7f0f7f0642ef97a1e5ae453c",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 402653440
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-1-after-seamless_offset.json",
+              "passed": true,
+              "default_p95_ms": 8.295800000000002,
+              "maximum_p95_ms": 8.126,
+              "manifest_hash": "913a00b189bb89155af0957b12c30a3ad199684b7f0f7f0642ef97a1e5ae453c",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 402653440
+            }
+          },
+          {
+            "round": 2,
+            "order": [
+              "after",
+              "before"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-2-before-seamless_offset.json",
+              "passed": true,
+              "default_p95_ms": 6.851699999999999,
+              "maximum_p95_ms": 6.290900000000001,
+              "manifest_hash": "913a00b189bb89155af0957b12c30a3ad199684b7f0f7f0642ef97a1e5ae453c",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 402653440
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-2-after-seamless_offset.json",
+              "passed": true,
+              "default_p95_ms": 6.223,
+              "maximum_p95_ms": 6.0158,
+              "manifest_hash": "913a00b189bb89155af0957b12c30a3ad199684b7f0f7f0642ef97a1e5ae453c",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 402653440
+            }
+          },
+          {
+            "round": 3,
+            "order": [
+              "before",
+              "after"
+            ],
+            "before": {
+              "report": "target-evidence/T-121/paired-3-before-seamless_offset.json",
+              "passed": true,
+              "default_p95_ms": 6.541,
+              "maximum_p95_ms": 6.5598,
+              "manifest_hash": "913a00b189bb89155af0957b12c30a3ad199684b7f0f7f0642ef97a1e5ae453c",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 402653440
+            },
+            "after": {
+              "report": "target-evidence/T-121/paired-3-after-seamless_offset.json",
+              "passed": true,
+              "default_p95_ms": 6.2224,
+              "maximum_p95_ms": 6.2988,
+              "manifest_hash": "913a00b189bb89155af0957b12c30a3ad199684b7f0f7f0642ef97a1e5ae453c",
+              "checks_passed": true,
+              "check_count": 20,
+              "default_peak_bytes": 402653440
+            }
+          }
+        ],
+        "median_comparison": {
+          "default": {
+            "before_median_p95_ms": 6.851699999999999,
+            "after_median_p95_ms": 6.223,
+            "change_percent": -9.175824977742742,
+            "within_5_percent": true
+          },
+          "maximum": {
+            "before_median_p95_ms": 6.5598,
+            "after_median_p95_ms": 6.2988,
+            "change_percent": -3.9787798408488118,
+            "within_5_percent": true
+          }
+        },
+        "manifest_hashes_unchanged": true,
+        "numerical_checks_all_passed": true
+      }
+    ],
+    "limitations": "Completion bounds vary substantially. The height timing function, PreparedHeight kernel/passes and shaders are unchanged. These observations do not establish a cause, and the failed gate is not waived. Native window/frame timing was not run."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "graph": [
+    {
+      "id": 1,
+      "input": null,
+      "params": {
+        "Source": {
+          "content_hash": [7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+          "extent": {"width": 17, "height": 13},
+          "interpretation": "SrgbPhoto"
+        }
+      }
+    },
+    {"id": 2, "input": 1, "params": {"Levels": {"black": 0.25, "white": 0.75, "gamma": 2.0}}},
+    {"id": 3, "input": 2, "params": {"Blur": {"sigma_source_px": 1.25}}},
+    {"id": 4, "input": 3, "params": {"NormalFromHeight": {"strength": 2.5}}}
+  ],
+  "selected_output": 4
+}

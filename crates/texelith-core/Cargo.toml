@@ -1,0 +1,18 @@
+[package]
+name = "texelith-core"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository = "https://github.com/Thyke/Texelith"
+description = "Core material graph and processing contracts for Texelith"
+readme = "../../README.md"
+keywords = ["pbr", "textures", "materials"]
+categories = ["graphics", "multimedia::images"]
+
+[dependencies]
+serde.workspace = true
+blake3.workspace = true
+
+[dev-dependencies]
+serde_json.workspace = true
