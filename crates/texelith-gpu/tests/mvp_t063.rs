@@ -1,4 +1,7 @@
 //! Preview mesh behavioral contracts.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "../examples/mvp_support/t063/checks.rs"]
 mod checks;
 #[path = "mvp_t063/report.rs"]

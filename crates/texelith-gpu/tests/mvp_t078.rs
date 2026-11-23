@@ -1,4 +1,7 @@
 //! Selective recalculation and cache reuse behavioral contracts.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "mvp_t078/behavior.rs"]
 mod behavior;
 #[path = "mvp_t078/fixtures.rs"]

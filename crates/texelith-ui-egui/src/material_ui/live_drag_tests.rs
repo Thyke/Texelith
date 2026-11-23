@@ -1,3 +1,5 @@
+use crate::gpu_availability;
+
 use super::*;
 
 fn photo_upload(extent: Extent) -> TypedSourceUpload {
@@ -37,11 +39,7 @@ fn change(c: &mut Controls, address: ParameterAddress, value: f32) {
 
 #[test]
 fn live_drag_all_maps_publish_inflight_samples_and_settle_full_after_release() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
@@ -159,11 +157,7 @@ fn live_drag_proxy_requests_bound_every_supported_source_and_map() {
 
 #[test]
 fn live_drag_3d_and_split_publish_held_gestures_then_latest_full_material() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
@@ -267,11 +261,7 @@ fn live_drag_3d_and_split_publish_held_gestures_then_latest_full_material() {
 
 #[test]
 fn live_drag_interruption_rejects_the_pending_2d_sample() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
@@ -364,11 +354,7 @@ fn frame(
 
 #[test]
 fn live_drag_publishes_changing_2d_textures_before_release() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());

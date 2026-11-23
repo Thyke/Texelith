@@ -1,4 +1,7 @@
 //! T-052 tests-first public-node contract. No production stubs or registry coupling.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "support/abi.rs"]
 #[allow(dead_code)]
 mod abi;

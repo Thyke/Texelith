@@ -1,4 +1,6 @@
-//! Real-worker regressions: adapter absence is a failure, never a passing skip.
+//! Real-worker regressions; shared availability guard skips hosts without hardware.
+use crate::gpu_availability;
+
 use std::{
     sync::{Arc, Mutex},
     time::{Duration, Instant},
@@ -108,11 +110,7 @@ fn request(worker: &GpuWorker) -> RenderRequest {
 
 #[test]
 fn failed_save_is_consumable_and_retry_succeeds_without_cancelling_intent() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
@@ -146,11 +144,7 @@ fn failed_save_is_consumable_and_retry_succeeds_without_cancelling_intent() {
 
 #[test]
 fn completed_material_clears_released_reservation_diagnostics() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());

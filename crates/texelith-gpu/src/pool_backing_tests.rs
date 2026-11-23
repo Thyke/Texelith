@@ -1,3 +1,5 @@
+use crate::gpu_availability;
+
 use crate::{
     Axis, GpuExecutor, Pass, PreparedPyramid,
     pool::{AllocationDesc, FenceId, ResourcePool},
@@ -8,11 +10,7 @@ use texelith_core::{Boundary, Extent, InputInterpretation, SourceDescriptor};
 
 #[test]
 fn populated_worker_backing_is_reused_and_evicted_before_pyramid_allocation() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let instance = wgpu::Instance::new(wgpu::InstanceDescriptor::new_without_display_handle());

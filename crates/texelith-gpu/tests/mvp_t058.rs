@@ -1,4 +1,7 @@
 //! T-058 tests-first contract. No production code, registration or stubs.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "support/abi.rs"]
 #[allow(dead_code)]
 mod abi;

@@ -7,6 +7,10 @@
 //! Source input is owned decoded RGBA8, numeric height, or encoded RGB normals.
 //! Alpha is ignored; ICC/EXIF handling and file decoding remain outside this boundary.
 
+#[cfg(test)]
+#[path = "../tests/common/gpu_availability.rs"]
+mod gpu_availability;
+
 pub mod cache;
 mod executor;
 mod params;

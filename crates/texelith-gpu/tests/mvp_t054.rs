@@ -1,4 +1,7 @@
 //! Tests-first metallic contract. No production stubs or registration internals.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "mvp_t054/behavior.rs"]
 mod behavior;
 #[path = "mvp_t054/contracts.rs"]

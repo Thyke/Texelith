@@ -1,4 +1,6 @@
 //! Hardware I/O only. Numerical work is always sent to the real material worker.
+use crate::gpu_availability;
+
 use std::{
     sync::{Arc, Mutex, OnceLock},
     time::Duration,
@@ -10,11 +12,7 @@ pub struct Gpu {
 }
 
 pub fn with_gpu(run: impl FnOnce(&Gpu)) {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     static SHARED: OnceLock<Mutex<Gpu>> = OnceLock::new();

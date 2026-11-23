@@ -1,4 +1,6 @@
 //! Device setup, synthetic upload and readback only; no solver dispatches here.
+use crate::gpu_availability;
+
 use super::oracle::Grid;
 use std::{
     sync::{Arc, Mutex, OnceLock},
@@ -10,11 +12,7 @@ pub struct Gpu {
     pub queue: Arc<wgpu::Queue>,
 }
 pub fn with_gpu(run: impl FnOnce(&Gpu)) {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     static GPU: OnceLock<Mutex<Gpu>> = OnceLock::new();

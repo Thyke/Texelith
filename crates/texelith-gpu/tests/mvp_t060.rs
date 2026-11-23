@@ -1,4 +1,7 @@
 //! T-060 behavioral contract. The proposed production boundary is isolated in node.rs.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "mvp_t060/behavior.rs"]
 mod behavior;
 #[allow(dead_code)]

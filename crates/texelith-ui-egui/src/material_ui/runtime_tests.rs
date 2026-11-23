@@ -1,3 +1,5 @@
+use crate::gpu_availability;
+
 use super::*;
 use crate::command_adapter::UiAction;
 use std::{sync::Mutex, time::Duration};
@@ -6,11 +8,7 @@ static GPU: Mutex<()> = Mutex::new(());
 
 #[test]
 fn studio_split_pairs_selected_map_with_lit_material_and_refreshes_selection() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
@@ -175,11 +173,7 @@ fn height_upload(offset: f32) -> TypedSourceUpload {
 
 #[test]
 fn failed_async_upload_preserves_session_and_allows_the_next_import() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
@@ -237,11 +231,7 @@ fn failed_async_upload_preserves_session_and_allows_the_next_import() {
 
 #[test]
 fn signed_and_hdr_exr_heights_reach_height_normal_and_ao_without_clipping() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());

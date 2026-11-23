@@ -1,5 +1,8 @@
 //! Production material scheduler and planner contracts.
 
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "mvp_t045/material.rs"]
 mod material;
 #[path = "mvp_t045/reservations.rs"]

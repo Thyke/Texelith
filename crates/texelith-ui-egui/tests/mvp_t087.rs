@@ -1,3 +1,6 @@
+#[path = "../../texelith-gpu/tests/common/gpu_availability.rs"]
+mod gpu_availability;
+
 use std::path::PathBuf;
 use texelith_ui_egui::batch_jobs::{InputSelection, enumerate};
 
@@ -80,6 +83,9 @@ fn presentation_accounts_for_numeric_heatmap_readback_and_display_allocations() 
 
 #[test]
 fn batch_smoke_uses_real_routing_and_checks_cancel_retry_and_bounds() {
+    if gpu_availability::skip_if_no_gpu() {
+        return;
+    }
     let mut config = texelith_ui_egui::startup::Config::parse(
         [
             "--mvp-smoke",

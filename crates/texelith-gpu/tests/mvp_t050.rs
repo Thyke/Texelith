@@ -1,5 +1,8 @@
 //! T-050 tests-first behavioral contract. See mvp_t050/README.md for the
 //! proposed additive solver API; no implementation or registration stubs here.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "mvp_t050/gpu.rs"]
 mod gpu;
 #[path = "mvp_t050/harness.rs"]

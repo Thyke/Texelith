@@ -1,4 +1,6 @@
 //! Test-only barriers pause real exports without relying on GPU/disk timings.
+use crate::gpu_availability;
+
 use super::*;
 use std::{
     path::Path,
@@ -65,7 +67,7 @@ pub(crate) fn export_phase(destination: &Path, name: &'static str, capture: &Exp
         release,
     });
     drop(guard);
-    let _ = wait.recv_timeout(Duration::from_secs(30));
+    let _ = wait.recv_timeout(Duration::from_secs(20));
     if let Some(hook) = HOOK.lock().unwrap().as_mut() {
         hook.paused = false;
     }
@@ -73,6 +75,9 @@ pub(crate) fn export_phase(destination: &Path, name: &'static str, capture: &Exp
 
 #[test]
 fn preview_completes_while_export_is_paused_before_gpu_and_publication() {
+    if gpu_availability::skip_if_no_gpu() {
+        return;
+    }
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../target/evidence/T-087")
         .join(format!("phase-regression-{}", std::process::id()));
@@ -108,7 +113,7 @@ fn preview_completes_while_export_is_paused_before_gpu_and_publication() {
     let mut results = Vec::new();
     for id in 1..=2 {
         let phase = receive
-            .recv_timeout(Duration::from_secs(60))
+            .recv_timeout(Duration::from_secs(20))
             .expect("export reached phase barrier");
         let (send, completion) = mpsc::channel();
         let preview = std::thread::spawn(move || {

@@ -1,7 +1,13 @@
 //! Explicit hardware regression: exercises Session, worker mailboxes and the real window.
+#[path = "../../texelith-gpu/tests/common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[test]
 #[ignore = "requires an interactive Windows desktop and RTX 5070 Ti / DX12"]
 fn perf_metrics_completed_proxies_survive_the_next_input() {
+    if gpu_availability::skip_if_no_gpu() {
+        return;
+    }
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../..");
     let stamp = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)

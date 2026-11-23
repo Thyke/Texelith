@@ -1,14 +1,13 @@
 //! T-079: exercise the public worker on a real shared device, never a CPU substitute.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "../examples/mvp_support/t079/checks.rs"]
 mod checks;
 
 #[test]
 fn bounded_immutable_export_contract() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let mut descriptor = wgpu::InstanceDescriptor::new_without_display_handle();

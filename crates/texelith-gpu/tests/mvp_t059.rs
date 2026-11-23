@@ -1,4 +1,7 @@
 //! T-059 tests-first behavioral contract. No production code or success stubs.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "support/abi.rs"]
 #[allow(dead_code)]
 mod abi;

@@ -1,4 +1,7 @@
 //! Headless regression for the user-visible environment/background path.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "../examples/mvp_support/t067/png.rs"]
 mod png;
 #[allow(dead_code)]
@@ -11,11 +14,7 @@ use texelith_gpu::{ibl::Environment, pbr::PbrSettings, viewport_shared::PreviewC
 
 #[test]
 fn sky_background_and_ibl_respond_independently_on_sphere_and_plane() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let mut desc = wgpu::InstanceDescriptor::new_without_display_handle();

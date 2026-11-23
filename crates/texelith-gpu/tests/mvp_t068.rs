@@ -1,3 +1,6 @@
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "../examples/mvp_support/t068/channels.rs"]
 mod channels;
 #[path = "../examples/mvp_support/t068/checks.rs"]
@@ -62,11 +65,7 @@ fn surface_parameters_reject_nonfinite_and_out_of_range_midlevels() {
 
 #[test]
 fn real_gpu_bounded_pom_and_shared_worker_contracts() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     use std::sync::Arc;

@@ -1,3 +1,6 @@
+#[path = "../../texelith-gpu/tests/common/gpu_availability.rs"]
+mod gpu_availability;
+
 use texelith_core::*;
 use texelith_ui_egui::{
     command_adapter::UiAction,
@@ -159,6 +162,9 @@ fn export_diagnostic_is_recognized_and_unknown_scenario_fails() {
 
 #[test]
 fn real_shared_gpu_export_contract() {
+    if gpu_availability::skip_if_no_gpu() {
+        return;
+    }
     let config = Config {
         size: 32,
         report: Some(
@@ -167,7 +173,6 @@ fn real_shared_gpu_export_contract() {
         ),
         ..Default::default()
     };
-    // Missing hardware is a failure, never a passing skip.
     let report = texelith_ui_egui::export_jobs::smoke::exercise(&config).unwrap();
     assert_eq!(report["presets"].as_array().unwrap().len(), 6);
     for name in [

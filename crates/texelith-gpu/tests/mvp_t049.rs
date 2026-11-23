@@ -1,6 +1,9 @@
 //! Poisson operator API and numerical contracts.
 //! No implementation stubs and no V-cycle driver are supplied by this pass.
 
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "support/abi.rs"]
 #[allow(dead_code)]
 mod abi;

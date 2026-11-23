@@ -1,3 +1,6 @@
+#[path = "../tests/common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "mvp_support/contract.rs"]
 mod contract;
 #[allow(dead_code)]

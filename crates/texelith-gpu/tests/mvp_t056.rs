@@ -1,4 +1,7 @@
 //! Tests-first paint-mask contract through the existing public material API.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "mvp_t056/behavior.rs"]
 mod behavior;
 #[path = "mvp_t056/contracts.rs"]

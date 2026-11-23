@@ -1,3 +1,6 @@
+#[path = "../../texelith-gpu/tests/common/gpu_availability.rs"]
+mod gpu_availability;
+
 use texelith_core::*;
 use texelith_ui_egui::export_perf::{Event, Trace, fixture_graph, fixture_pixels, scenario_plan};
 
@@ -192,6 +195,9 @@ fn diagnostic_arguments_reject_unknown_profiles_and_preserve_native_report_paths
 
 #[test]
 fn real_export_measures_publication_after_warmup_and_cache_invalidation() {
+    if gpu_availability::skip_if_no_gpu() {
+        return;
+    }
     let stamp = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()

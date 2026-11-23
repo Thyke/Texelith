@@ -1,3 +1,5 @@
+use crate::gpu_availability;
+
 use super::*;
 use crate::{
     batch_jobs::*, command_adapter::UiAction, controls::Controls, material_ui::MaterialIntegration,
@@ -60,11 +62,7 @@ fn until(mut step: impl FnMut() -> bool) {
 
 #[test]
 fn four_k_import_slider_and_standalone_export_succeed_and_batch_waits() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let (device, queue) = device();
@@ -228,11 +226,7 @@ fn four_k_import_slider_and_standalone_export_succeed_and_batch_waits() {
 
 #[test]
 fn tiled_samples_and_saves_match_numeric_oracle_including_tail_rows() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let (device, queue) = device();

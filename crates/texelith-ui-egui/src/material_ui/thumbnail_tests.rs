@@ -1,3 +1,5 @@
+use crate::gpu_availability;
+
 use super::*;
 use crate::material_ui::MAPS;
 
@@ -70,11 +72,7 @@ fn cards_are_drawn(c: &mut Controls, ctx: &egui::Context) {
 
 #[test]
 fn seven_cards_populate_without_selection_and_keep_images_through_generation_changes() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());

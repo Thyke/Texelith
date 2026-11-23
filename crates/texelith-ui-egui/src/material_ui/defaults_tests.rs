@@ -1,3 +1,5 @@
+use crate::gpu_availability;
+
 use super::*;
 use crate::material_ui::MAPS;
 use std::collections::BTreeMap;
@@ -204,11 +206,7 @@ fn sheet(h: &Harness, bundle: &CompletedMaterial, maps: &Maps, old: bool) -> Vec
 
 #[test]
 fn photo_defaults_show_brick_shapes_and_dielectric_maps() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());
@@ -292,11 +290,7 @@ fn photo_defaults_show_brick_shapes_and_dielectric_maps() {
 
 #[test]
 fn flat_photos_stay_neutral_and_metal_requires_an_explicit_edit() {
-    if std::env::var("TEXELITH_CI_NO_GPU").as_deref() == Ok("1") {
-        eprintln!(
-            "SKIP GPU: no GPU adapter (TEXELITH_CI_NO_GPU=1); hardware assertions not run: {:?}",
-            std::thread::current().name()
-        );
+    if gpu_availability::skip_if_no_gpu() {
         return;
     }
     let _serial = GPU.lock().unwrap_or_else(|e| e.into_inner());

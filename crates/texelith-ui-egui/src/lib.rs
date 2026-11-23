@@ -1,5 +1,9 @@
 //! Native eframe bootstrap and immutable shared-device display bridge.
 
+#[cfg(test)]
+#[path = "../../texelith-gpu/tests/common/gpu_availability.rs"]
+mod gpu_availability;
+
 mod app;
 pub mod batch_jobs;
 pub mod command_adapter;

@@ -1,4 +1,7 @@
 //! T-048 independent behavioral contract; production code belongs to the next role.
+#[path = "common/gpu_availability.rs"]
+mod gpu_availability;
+
 #[path = "support/abi.rs"]
 #[allow(dead_code)]
 mod abi;
