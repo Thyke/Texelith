@@ -245,9 +245,8 @@ impl eframe::App for Shell {
                 if self.studio_snapshots.tick(
                     &ctx,
                     &mut self.controls,
-                    self.config.input.is_some(),
                     settled,
-                    self.config.studio_snapshot_size,
+                    &self.config,
                     &self.progress.material_captures,
                 ) {
                     ctx.send_viewport_cmd(egui::ViewportCommand::Close);
@@ -640,9 +639,10 @@ fn run_inner(
     if config.ui_snapshot.is_some() {
         // Preserve the same logical workspace when capturing at different scales.
         let scale: f32 = config.scale.parse().map_err(|_| "invalid snapshot scale")?;
+        let [width, height] = config.studio_snapshot_size.unwrap_or([1280, 800]);
         options.viewport = options
             .viewport
-            .with_inner_size([1280.0 * scale, 800.0 * scale]);
+            .with_inner_size([width as f32 * scale, height as f32 * scale]);
     }
     let progress = Arc::new(Progress::default());
     let runtime = Arc::new(Mutex::new(Runtime::default()));
@@ -976,8 +976,12 @@ fn run_inner(
     }
     if let Some(dir) = &config.ui_snapshot {
         for (name, image) in progress.material_captures.lock().unwrap().iter() {
-            write_evidence_screenshot(&dir.join(format!("{name}-{}.png", config.scale)), image)
-                .map_err(|e| e.to_string())?;
+            let path = dir.join(format!("{name}-{}.png", config.scale));
+            if config.readme_snapshots {
+                write_screenshot(&path, image).map_err(|e| e.to_string())
+            } else {
+                write_evidence_screenshot(&path, image)
+            }?;
         }
     }
     let errors = progress.errors.lock().unwrap().clone();

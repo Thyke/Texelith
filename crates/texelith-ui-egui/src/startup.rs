@@ -2,8 +2,38 @@ use std::{ffi::OsString, path::PathBuf, sync::Arc};
 
 use crate::platform;
 
+#[cfg(test)]
+mod readme_tests {
+    use super::Config;
+
+    #[test]
+    fn readme_captures_require_input_destination_and_native_scale() {
+        let args = [
+            "--readme-snapshots",
+            "--input",
+            "photo.jpg",
+            "--ui-snapshot",
+            "captures",
+        ];
+        let config = Config::parse(args.map(str::to_owned)).unwrap();
+        assert!(config.studio_snapshots && config.readme_snapshots);
+        assert_eq!(config.studio_snapshot_size, Some([1920, 1080]));
+        assert_eq!(config.scale, "1.0");
+        for invalid in [
+            vec!["--readme-snapshots"],
+            vec!["--readme-snapshots", "--input", "photo.jpg"],
+            vec!["--readme-snapshots", "--ui-snapshot", "captures"],
+            [args.as_slice(), &["--scale", "1.5"]].concat(),
+            [args.as_slice(), &["--studio-snapshot-size", "1280x800"]].concat(),
+        ] {
+            assert!(Config::parse(invalid.into_iter().map(str::to_owned)).is_err());
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Config {
+    pub readme_snapshots: bool,
     pub studio_snapshots: bool,
     pub studio_snapshot_size: Option<[u32; 2]>,
     pub debug_layers: bool,
@@ -43,6 +73,7 @@ pub struct Config {
 impl Default for Config {
     fn default() -> Self {
         Self {
+            readme_snapshots: false,
             studio_snapshots: false,
             studio_snapshot_size: None,
             debug_layers: false,
@@ -177,15 +208,21 @@ impl Config {
                         Some(args.next().ok_or("missing --ui-snapshot directory")?.into())
                 }
                 "--studio-snapshots" => config.studio_snapshots = true,
+                "--readme-snapshots" => {
+                    config.readme_snapshots = true;
+                    config.studio_snapshots = true;
+                    config.studio_snapshot_size = Some([1920, 1080]);
+                }
                 "--studio-snapshot-size" => {
                     config.studio_snapshot_size =
                         Some(
                             match next_text(&mut args, "--studio-snapshot-size")?.as_str() {
+                                "1920x1080" => [1920, 1080],
                                 "1600x1000" => [1600, 1000],
                                 "1280x800" => [1280, 800],
                                 "960x600" => [960, 600],
                                 _ => return Err(
-                                    "--studio-snapshot-size must be 1600x1000, 1280x800 or 960x600"
+                                    "--studio-snapshot-size must be 1920x1080, 1600x1000, 1280x800 or 960x600"
                                         .into(),
                                 ),
                             },
@@ -223,6 +260,17 @@ impl Config {
             config.backend = backend;
         }
         config.backends()?;
+        if config.readme_snapshots
+            && (config.input.is_none()
+                || config.ui_snapshot.is_none()
+                || config.scale != "1.0"
+                || config.studio_snapshot_size != Some([1920, 1080]))
+        {
+            return Err(
+                "--readme-snapshots requires --input, --ui-snapshot and scale 1.0 at 1920x1080"
+                    .into(),
+            );
+        }
         if config.studio_snapshots && config.ui_snapshot.is_none() {
             return Err("--studio-snapshots requires --ui-snapshot".into());
         }

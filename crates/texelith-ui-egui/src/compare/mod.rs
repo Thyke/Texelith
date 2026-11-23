@@ -164,12 +164,35 @@ pub(crate) fn active(c: &crate::controls::Controls) -> bool {
     v.mode == texelith_core::ViewMode::ThreeD
         || (c.preview.compare_enabled && v.capture_a.is_some())
         || v.tiles.random_rotation
-        || v.tiles.count != 1
+        // The CPU-presented map already supports tiled diagnostic overlays;
+        // the GPU viewport's map renderer does not apply the seam heatmap.
+        || (v.tiles.count != 1 && !c.heatmap)
 }
 
 #[cfg(test)]
 mod framing_tests {
     use super::*;
+
+    #[test]
+    fn tiled_heatmap_uses_diagnostic_presenter_but_3d_keeps_gpu_viewport() {
+        use crate::command_adapter::UiAction;
+        use texelith_core::*;
+        let mut c = crate::controls::Controls::new(true);
+        c.action(UiAction::Request(CommandRequest::SetTiles {
+            tiles: Tiles {
+                count: 3,
+                ..Default::default()
+            },
+        }));
+        assert_eq!(c.session().view_state().tiles.count, 3);
+        assert!(active(&c));
+        c.heatmap = true;
+        assert!(!active(&c));
+        c.action(UiAction::Request(CommandRequest::SetMode {
+            mode: ViewMode::ThreeD,
+        }));
+        assert!(active(&c));
+    }
 
     #[test]
     fn reset_fits_seventy_percent_at_wide_and_tall_aspects() {
