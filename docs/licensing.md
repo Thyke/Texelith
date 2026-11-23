@@ -4,6 +4,7 @@ Texelith's original code and documentation are offered under the repository MIT 
 
 | Asset or data | Origin and license | Release decision |
 |---|---|---|
+| `docs/images/{hero,maps,materials,seamless,export}.png` | App captures and labelled composites using Poly Haven CC0 photos: `red_brick_03` and `rusty_metal_02` by Rob Tuytel; `rock_wall_08` and `wood_planks` by Amal Kumar. See `docs/images/README.md` for source links. | Include the screenshots. The original 2K JPG inputs are used only to make screenshots and are not redistributed; keep `target/readme-inputs/` untracked. |
 | `crates/texelith-gpu/shaders/**/*.wgsl`, `crates/texelith-gpu/src/typed_source.wgsl` | Project shader source; project MIT license, subject to source provenance review. | Include after provenance review. |
 | `crates/texelith-core/presets/*.json`; `crates/texelith-core/tests/fixtures/**`; `crates/texelith-gpu/examples/mvp_support/t121/verification.json` | Project configuration and test data; project MIT license, subject to provenance review. | Include after review for private paths. |
 | `crates/texelith-io/tests/mvp_t077/nfc.json` and generated normalization tables | Generated from Unicode 17 / ICU 78.2 data; Unicode-3.0, text in `crates/texelith-io/src/export_transactions/LICENSE-UNICODE`. | Include with Unicode license. |

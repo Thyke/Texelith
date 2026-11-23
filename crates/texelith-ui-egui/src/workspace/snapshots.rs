@@ -1,7 +1,7 @@
 //! Native Layer Studio matrix. Run once empty and once with --input.
 use crate::{command_adapter::UiAction, controls::Controls, material_ui::snapshots::Captures};
 use std::time::{Duration, Instant};
-use texelith_core::{CommandRequest, ViewMode};
+use texelith_core::*;
 
 #[derive(Default)]
 pub(crate) struct Driver {
@@ -15,13 +15,14 @@ impl Driver {
         &mut self,
         ctx: &egui::Context,
         c: &mut Controls,
-        material: bool,
         settled: bool,
-        requested_size: Option<[u32; 2]>,
+        config: &crate::startup::Config,
         captures: &Captures,
     ) -> bool {
+        let material = config.input.is_some();
+        let requested_size = config.studio_snapshot_size;
         let states = if material {
-            4 + crate::material_ui::MAPS.len()
+            4 + crate::material_ui::MAPS.len() + if config.readme_snapshots { 4 } else { 0 }
         } else {
             1
         };
@@ -57,6 +58,10 @@ impl Driver {
             if material {
                 match state {
                     0..=3 => ["2d", "3d", "split", "export-options"][state],
+                    11 => "seams-before",
+                    12 => "seams-after",
+                    13 => "tiled-before",
+                    14 => "tiled-after",
                     _ => crate::material_ui::map_label(crate::material_ui::MAPS[state - 4]),
                 }
             } else {
@@ -64,14 +69,85 @@ impl Driver {
             }
         );
         if self.started.is_none() {
+            if config.readme_snapshots && self.stage == 0 {
+                c.export_options.destination = r"C:\Textures\Texelith".into();
+                c.export_options.material_name = match config
+                    .input
+                    .as_ref()
+                    .and_then(|p| p.file_stem())
+                    .and_then(|s| s.to_str())
+                {
+                    Some("rock_wall_08_diff_2k") => "Rock_Wall_PBR",
+                    Some("wood_planks_diff_2k") => "Wood_Planks_PBR",
+                    Some("rusty_metal_02_diff_2k") => "Rusty_Metal_PBR",
+                    _ => "Red_Brick_PBR",
+                }
+                .into();
+                // Bare metal is selected by color; the rusty orange stays dielectric.
+                if config
+                    .input
+                    .as_ref()
+                    .and_then(|p| p.file_stem())
+                    .is_some_and(|s| s == "rusty_metal_02_diff_2k")
+                {
+                    // An empty painted mask is zero. Subtracting it preserves
+                    // the color selection instead of the photo default of zero metal.
+                    c.action(UiAction::Request(CommandRequest::ConfigureMaterial {
+                        seamless: false,
+                        painted_mask: true,
+                    }));
+                    let snapshot = c.session().snapshot().unwrap();
+                    let node = snapshot.graph.material_outputs().unwrap()[&MapKind::Metallic].node;
+                    let normal = snapshot.graph.material_outputs().unwrap()[&MapKind::Normal].node;
+                    for (parameter, value) in [
+                        (
+                            ParameterId::PickedColor,
+                            ParameterValue::Color([0.4, 0.4, 0.4]),
+                        ),
+                        (ParameterId::Radius, ParameterValue::Float(0.12)),
+                        (ParameterId::Threshold, ParameterValue::Float(0.45)),
+                    ] {
+                        c.action(UiAction::Request(CommandRequest::SetParameter {
+                            address: ParameterAddress { node, parameter },
+                            value,
+                            gesture: None,
+                        }));
+                    }
+                    c.action(UiAction::Request(CommandRequest::SetParameter {
+                        address: ParameterAddress {
+                            node: normal,
+                            parameter: ParameterId::Strength,
+                        },
+                        value: ParameterValue::Float(0.3),
+                        gesture: None,
+                    }));
+                }
+            }
             c.close_palette();
             c.preview.split_view = matches!(state, 2 | 3);
             c.preview.revision += 1;
             c.workspace.export_options_open = state == 3;
             c.workspace.inspector_open = None;
             if material {
+                if state >= 11 {
+                    c.action(UiAction::Request(CommandRequest::ConfigureMaterial {
+                        seamless: matches!(state, 12 | 14),
+                        painted_mask: false,
+                    }));
+                    c.action(UiAction::Request(CommandRequest::SetTiles {
+                        tiles: Tiles {
+                            count: 3,
+                            ..Default::default()
+                        },
+                    }));
+                    c.action(UiAction::Request(CommandRequest::InspectSeams {
+                        enabled: state <= 12,
+                    }));
+                }
                 c.action(UiAction::Request(CommandRequest::SelectMap {
-                    map: if state < 4 {
+                    map: if state >= 11 {
+                        MapKind::Albedo
+                    } else if state < 4 {
                         texelith_core::MapKind::Normal
                     } else {
                         crate::material_ui::MAPS[state - 4]
